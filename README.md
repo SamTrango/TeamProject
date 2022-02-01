@@ -5,4 +5,5 @@ Team Members:<br/>
 Sam Kacprowicz <br/>
 Cody Walter <br/>
 Eric Wu <br/>
-Ian McDonough
+Ian McDonough <br/>
+Daniel Cohen 
