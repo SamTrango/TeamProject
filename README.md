@@ -3,5 +3,5 @@ This is the GitHub repo for our team project for CSE360. The team project is a d
 <hr>
 Team Members:<br/>
 Sam Kacprowicz <br/>
-Cody Walter 
+Cody Walter <br/>
 Eric Wu
