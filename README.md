@@ -1,5 +1,5 @@
 ## TeamProject
 **Team project for CSE360.**
-<br/>
-Team Members:<br/>
+<br/><br/>
+Team Members:<hr><br/>
 Sam Kacprowicz
