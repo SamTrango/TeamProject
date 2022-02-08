@@ -6,4 +6,4 @@ Sam Kacprowicz <br/>
 Cody Walter <br/>
 Eric Wu <br/>
 Ian McDonough <br/>
-Daniel Cohen 
+Daniel Cohen <br/>
