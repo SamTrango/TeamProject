@@ -1,5 +1,7 @@
+import java.util.ArrayList;
+
 public class OrderQueue {
-    private Order[] orderQueue;
+    private ArrayList<Order> orderQueue;
 
     public void loadFromFile(String file){
 

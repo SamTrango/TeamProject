@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Order {
-    private Map<MenuItem, Integer> items;
+    private Map<MenuItem, Integer> items = new HashMap<MenuItem, Integer>();
     private boolean hasCoupon = false;
     private double discountPercentage;
     private String username;
