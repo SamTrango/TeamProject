@@ -1,8 +1,6 @@
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.ArrayList;
 public class Menu {
-    private MenuItem[] items;
+    private ArrayList<MenuItem> items;
 
     public void loadFromFile(String file){
 

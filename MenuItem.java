@@ -1,6 +1,7 @@
+import java.util.ArrayList;
 public class MenuItem {
     public String name;
-    private String[] ingredients;
+    private ArrayList<String> ingredients;
     private String imageSrc;
     private double price;
     private int prepareTime;
@@ -9,7 +10,7 @@ public class MenuItem {
         return name;
     }
     public String[] getIngredients(){
-        return ingredients[];
+        return ingredients;
     }
     public String getImgSrc(){
         return imageSrc;
