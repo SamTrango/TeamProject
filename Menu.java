@@ -19,7 +19,7 @@ public class Menu {
     }
 
     public MenuItem[] getItems(){
-        return MenuItem;
+        return items;
     }
 
 }
