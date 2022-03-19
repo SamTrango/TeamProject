@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Order {
@@ -19,19 +21,19 @@ public class Order {
 
     }
 
-    public MenuItem[] getItems(){
-
+    public List<MenuItem> getItems(){
+        return new ArrayList<>();
     }
 
     public double priceForItem(MenuItem item){
-
+        return 0;
     }
 
     public double calculateTotalPrice(){
-
+        return 0;
     }
 
     public int calculateTotalWaitTime(){
-
+        return 0;
     }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 public class MenuItem {
     public String name;
     private ArrayList<String> ingredients;
@@ -9,7 +10,7 @@ public class MenuItem {
     public String getName(){
         return name;
     }
-    public String[] getIngredients(){
+    public List<String> getIngredients(){
         return ingredients;
     }
     public String getImgSrc(){
