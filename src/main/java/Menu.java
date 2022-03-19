@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 public class Menu {
     private ArrayList<MenuItem> items;
 
@@ -18,7 +19,7 @@ public class Menu {
 
     }
 
-    public MenuItem[] getItems(){
+    public List<MenuItem> getItems(){
         return items;
     }
 
