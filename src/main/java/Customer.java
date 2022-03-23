@@ -7,7 +7,7 @@
  *
  * @author daniel
  */
-public class Customer {
+public class Customer extends User {
     
     private String address;
     private String phoneNumber;
@@ -20,7 +20,7 @@ public class Customer {
     }
     
     public String getPhoneNUmber() {
-                return "";
+        return "";
 
     }
     
