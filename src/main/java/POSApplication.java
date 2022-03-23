@@ -13,7 +13,7 @@ public class POSApplication extends Application
     private Menu mMenu;
     private OrderQueue mOrderQueue;
     private User mLoggedInUser;
-    //private LoginUI mLoginUI;
+    private LoginUI mLoginUI;
     private OrderUI mOrderUI;
     private EmployeeUI mEmployeeUI;
 

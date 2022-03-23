@@ -7,29 +7,28 @@
  *
  * @author daniel
  */
+import java.util.Date;
+
 public class CreditCardInfo {
-    
+
     private String number;
     private Date date;
     private short code;
-    
-      public CreditCardInfo(String ccNum, Date date, short secCode){
+
+    public CreditCardInfo(String ccNum, Date date, short secCode) {
 
     }
-      
-      public String getNumber(){
-          
-          
+
+    public String getNumber() {
+        return "";
     }
-      
-      public Date getDate() {
-          
-      }
-      
-      public short getCode() {
-          
-      }
-      
-      
-    
+
+    public Date getDate() {
+        return null;
+    }
+
+    public short getCode() {
+        return 0;
+    }
+
 }

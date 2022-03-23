@@ -10,37 +10,24 @@
  */
 import javafx.scene.layout.Pane;
 public class LoginUI extends Pane {
-    
-    
+
     private POSApplication _posApp;
-    
+
     public LoginUI(POSApplication app) {
-        
+
         _posApp = app;
-        
-       
 
     }
-    
+
     private void showMainScreen() {
-        
-        
-        
+
     }
-    
+
     private void showAccountCreation() {
-        
-        
+
     }
-    
+
     public void startLogin() {
-        
-        
+
     }
-        
-    
-    
-    
-    
-    
 }
