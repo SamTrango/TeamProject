@@ -6,7 +6,10 @@ import java.util.Scanner;
 
 public class OrderQueue {
     private ArrayList<Order> orderQueue = new ArrayList<>();
-
+    private Menu _menu;
+    public OrderQueue(Menu menu){
+        _menu = menu;
+    }
     public void loadFromFile(String file) throws FileNotFoundException {
         File orderFile = new File(file);
         Scanner scanner = new Scanner(orderFile);
@@ -26,7 +29,7 @@ public class OrderQueue {
                     String menuItemName = sections[i];
                     int menuItemAmount = Integer.parseInt(sections[i+1]);
                     for(int j = 0; j < menuItemAmount; j++){
-                        newOrder.addToCart(new MenuItem(menuItemName, "", 0.0, 0)); //Place Holder until Menu has been created
+                        newOrder.addToCart(searchMenuItem(menuItemName));
                     }
                 }
                 orderQueue.add(newOrder);
@@ -45,5 +48,14 @@ public class OrderQueue {
 
     public void removeOrder(Order order) {
         orderQueue.remove(order);
+    }
+
+    private MenuItem searchMenuItem(String itemName){//Searches through Menu list for MenuItem;
+        for(MenuItem item: _menu.getItems()){
+            if(item.getName().equals(itemName)){
+                return item;
+            }
+        }
+        return null;
     }
 }
