@@ -1,8 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.layout.Pane;
 
-public class OrderUI extends Pane 
-{
+public class OrderUI extends Pane {
     private POSApplication app;
     private Order inProgressOrder;
 

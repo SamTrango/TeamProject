@@ -1,23 +1,32 @@
 import java.util.ArrayList;
 import java.util.List;
 public class MenuItem {
-    public String name;
-    private ArrayList<String> ingredients;
-    private String imageSrc;
-    private double price;
-    private int prepareTime;
+    public String _name;
+    private ArrayList<String> _ingredients;
+    private String _imageSrc;
+    private double _price;
+    private int _prepareTime;
 
+    public MenuItem(String name, String imagSrc, double price, int prepareTime){
+        _name = name;
+        _imageSrc = imagSrc;
+        _price = price;
+        _prepareTime = prepareTime;
+    }
     public String getName(){
-        return name;
+        return _name;
     }
     public List<String> getIngredients(){
-        return ingredients;
+        return _ingredients;
     }
     public String getImgSrc(){
-        return imageSrc;
+        return _imageSrc;
     }
     public double getPrice(){
-        return price;
+        return _price;
+    }
+    public int getPrepareTime(){
+        return _prepareTime;
     }
     public void setName(String name){
 
