@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class UserDatabase {
         return new User();
     }
 
-    User getUser() {
-        return new User();
+    Collection<User> getUsers() {
+        return users.values();
     }
 }
