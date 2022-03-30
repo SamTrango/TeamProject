@@ -39,7 +39,7 @@ public class User {
      * @description: This method is used to descern whether the USER object is an 
      * EMPLOYEE. It will do so by RETURNing the value assigned to the USER object's
      * instance variable, "isEmployee".
-     * @return: The value "isEmployee" is set to.
+     * @return: The value "isEmployee" is set.
      */
     public boolean isEmployee() {
         return this.isEmployee;
