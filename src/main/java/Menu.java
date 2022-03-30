@@ -10,8 +10,7 @@ public class Menu {
     public void storeToFile(String file){
 
     }
-
-    public void addItem(MenuItem name){
+    public void addItem(MenuItem name){        
 
     }
 
