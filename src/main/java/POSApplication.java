@@ -9,20 +9,35 @@ import javafx.stage.Stage;
  */
 public class POSApplication extends Application 
 {
-    private UserDatabase mUserDatabase;
-    private Menu mMenu;
-    private OrderQueue mOrderQueue;
+    private final UserDatabase mUserDatabase;
+    private final Menu mMenu;
+    private final OrderQueue mOrderQueue;
     private User mLoggedInUser;
     private LoginUI mLoginUI;
-    private OrderUI mOrderUI;
-    private EmployeeUI mEmployeeUI;
+    private final OrderUI mOrderUI;
+    private final EmployeeUI mEmployeeUI;
+
+    private Scene mScene;
+
+    public POSApplication() {
+        mUserDatabase = new UserDatabase();
+        mMenu = new Menu();
+        mOrderQueue = new OrderQueue(mMenu);
+        mLoggedInUser = null;
+        mLoginUI = new LoginUI(this);
+        mOrderUI = new OrderUI(this);
+        mEmployeeUI = new EmployeeUI(this);
+    }
 
     public void loggedIn(User user) {
-
+        mLoggedInUser = user;
+        mScene.setRoot(mOrderUI);
     }
 
     public void loggedOut() {
-
+        mLoggedInUser = null;
+        mScene.setRoot(mLoginUI);
+        mLoginUI.startLogin();
     }
 
     public Menu getMenu() {
@@ -39,13 +54,13 @@ public class POSApplication extends Application
 
     @Override
     public void start(Stage stage) {
-        var label = new Label("Hello");
-        var scene = new Scene(new StackPane(label), 640, 480);
-        stage.setScene(scene);
+        mScene = new Scene(mOrderUI, 640, 480);
+        stage.setScene(mScene);
         stage.show();
     }
 
     public static void main(String[] args) {
+        
         launch();
     }
 }
