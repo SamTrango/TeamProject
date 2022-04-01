@@ -49,6 +49,7 @@ public class Menu {
             fw.write(items.get(i).getPrepTime());
             fw.write(items.get(i).getIngredients().toString());
         }
+        fw.close();
     }
     public void addItem(MenuItem name){        
         items.add(name);
