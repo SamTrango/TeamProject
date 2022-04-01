@@ -9,7 +9,7 @@
  */
 import java.util.Date;
 
-public class CreditCardInfo {
+public class CreditCardInfo implements Serializable{
 
     private String number;
     private Date date;

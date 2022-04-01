@@ -8,11 +8,19 @@
  * is not.
  */
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
     private String username;    //Stores the name of the USER.
     private String password;    //Stores the password of the USER.
     private boolean isEmployee; //TRUE if the USER is an EMPLOYEE.
 
+    /**
+     * Constructor for USER object.
+     * @param un - desired username.
+     * @param pw - desired password.
+     * @param employee - TRUE if USER will be employee, FALSE if user is CUSTOMER.
+     */
     public User(String un, String pw, boolean employee) {
         this.username = un;
         this.password = pw;
@@ -52,7 +60,18 @@ public class User {
         return rv;
     }
     
+    /**
+     * @Description: This method returns the User's password.
+     * @return: password field from USER object.
+     */
     public String getPassword() {
         return this.password;
+    }
+
+    /**
+     * @Description: Standard toString method.
+     */
+    public @Override String toString() {
+        return this.getUsername() + "\n" + this.getPassword() + "\n" + this.isEmployee() + "\n";        
     }
 }

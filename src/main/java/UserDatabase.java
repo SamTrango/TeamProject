@@ -1,3 +1,11 @@
+/**
+ * @Title: UserDatabase.java
+ * @Author: Sam Kacprowicz 
+ * @Description: This class will contain a HashMap that will function as the database used to store the USER objects.
+ * The class contains functionality to write the HashMap to a file, and read from that file, each via serialization.
+ */
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,113 +21,65 @@ import java.util.Map.Entry;
 public class UserDatabase {
     Map<String, User> users = new HashMap<String, User>();
 
-    /*
-    void loadFromFile(String filename) throws FileNotFoundException {
-        //username, password, isEmployee, address; phoneNumber; creditCard(year, month, date); numberOfOrders numberOfCoupons
-        String readUsername = "";
-        String readPassword = "";
-        String readAddress = "";
-        String readPhoneNumber = "";
-        String tempBool = "";
-        String num = "";        
-        short readCode = 0;
-        int readYear;
-        int readMonth;         
-        int readNumberOfOrders;
-        int readnumberOfCupons;
-        boolean readIsEmployee;
-        
-        Scanner read = new Scanner(new File(filename));
-        while (read.hasNext()) {
-            User newUser;
-            readIsEmployee = false;
-            readUsername = read.nextLine();
-            readPassword = read.nextLine();
-            tempBool = read.nextLine();            
-            readIsEmployee = (tempBool.equals("true")) ? true : false;
-            //The folowing inits will occur if the USER is a CUSTOMER.
-            if (!readIsEmployee) {                                
-                readAddress = read.nextLine();
-                readPhoneNumber = read.nextLine();
-                //ccnum
-                num = read.nextLine();
-                //code   
-                readCode = read.nextShort();             
-                readYear = read.nextInt();
-                readMonth = read.nextInt();
-                Date date = new Date(readYear, readMonth, 0);          
-                readNumberOfOrders = read.nextInt();
-                readnumberOfCupons = read.nextInt();
-                CreditCardInfo ccinfo = new CreditCardInfo(num, date, readCode);
-                //Make newUser a CUSTOMER.
-                newUser = new Customer(readUsername, readPassword, readAddress, readPhoneNumber, ccinfo);                                
-            }
-            else {
-                //Make newUser a USER (employee).
-                newUser = new User(readUsername, readPassword, readIsEmployee);                
-            }
-            addUser(newUser);
-        }
-    }
-
-    
-    void storeToFile(String filename) throws IOException {
-        FileWriter fw = new FileWriter(filename);
-        List<String> keylist = new ArrayList<String>(users.keySet());
-        for (int i = 0; i < users.size(); i++) {
-            fw.write(users.get(keylist.get(i)).getPassword());
-
-        }
-        //username, password, isEmployee, address; phoneNumber; creditCard(year, month,); numberOfOrders numberOfCoupons
-        users.forEach((k, v) -> {
-            if (v instanceof Customer) {
-                Customer currentCust = (Customer) v;
-                try {
-                    fw.write(currentCust.getUsername());
-                    fw.write(currentCust.getPassword());
-                    fw.write(currentCust.isEmployee());
-                    fw.write(currentCust.getAddress());
-                    fw.write(currentCust.getPhoneNUmber());
-                    CreditCardInfo cred = currentCust.getCreditCardInfo();
-                    //fw.write(currentCust.getCreditCardInfo().toString());
-                    fw.write(cred.getNumber());
-                    fw.write(cred.getCode());
-                    fw.write(cred.getDate().getYear());
-                    fw.write(cred.getDate().getMonth());
-                    fw.write(currentCust.getNumberOfOrders());
-                    fw.write(currentCust.getNumberOfCoupons());
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            if (v instanceof User) {
-                User currentUser = (User) v;
-                try {
-                    fw.write(currentUser.getUsername());
-                    fw.write(currentUser.getPassword());
-                    fw.write(currentUser.isEmployee());
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        });
-        fw.close();
-    }
-    */
+    /**
+     * In order to use the loadFromFile and storeToFile methods, you need to add the phrase 'implements Serializable'
+     * to the USER, CUSTOMER, and CREDICARDINFO classes. In addition, the file written should be of type '.ser', a 
+     * universal filetype, e.g., "UserList.ser".
+     * @throws ClassNotFoundException, IOException
+     */
     
     /**
-    * 
-    * @param newUser
+     * @Description: This method will load the HashMap from the serialized file via 
+     * deserialization.
+     * @param filename - the name of the file that contains the serialized HashMap.
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    void loadFromFile(String filename) throws IOException, ClassNotFoundException {        
+        //--------- HashMap implements Serializable already -------
+        try{
+            users = null;                                               //HashMap must be set to NULL.
+            FileInputStream fileIn = new FileInputStream(filename);     //Stream used to read from file.
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn); //Stream used to interpret the object's serialization.
+            users = (HashMap) objectIn.readObject();                    //Must CAST the serialied object to the proper datatype to avoid ClassNotFoundException.
+            objectIn.close();                                           //Close stream.
+            fileIn.close();                                             //Close stream.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @Description: This method will use serialization to store the HashMap into 
+     * a local file. It is reccomended to use the extension ".ser" as the file that
+     * will contain the serialized HashMap, as ".ser" is universallly recognised 
+     * in this context.
+     * @param filename - the name of the file to be written to.
+     * @throws IOException
+     */
+    void storeToFile(String filename) throws IOException {
+        try{
+            FileOutputStream fileOut = new FileOutputStream(filename);  //Stream used to write to file.
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);   //Stream used to format the object's serialization.
+            out.writeObject(users);                                     //Write object.
+            out.close();                                                //Close stream.
+            fileOut.close();                                            //Close stream.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+    * @Description: This method will add a USER object to the HashMap.
+    * @param newUser - the USER to be added to the HashMap.
     */
     void addUser(User newUser) {
         users.put(newUser.getUsername(), newUser);
     }
 
     /**
-     * 
-     * @param toLookup
+     * @Description: This method will return a USER object from the HashMap, users.
+     * @param toLookup - the username of the USER object to be returned.
      * @return
      */
     User lookupUser(String toLookup) {
@@ -127,69 +87,10 @@ public class UserDatabase {
     }
 
     /**
-     * 
-     * @return a list (collection) of USERS.
+     * @Description: This method will return the USERS in the form of a COLLECTION.
+     * @return: a list (collection) of USERS.
      */
     Collection<User> getUser() {
         return users.values();
-    }
-
-
-
-    /**
-     * The following four methods are alternatives in case the ones above do not work.
-     * In order to use these methods, you need to add the phrase 'implements Serializable'
-     * to the USER class. In addition, the file written should be of type '.ser', a 
-     * universal filetype, e.g., "UserList.ser".
-     * @throws ClassNotFoundException
-     */
-
-    /* 
-    void loadFromFile(String filename) throws IOException {
-        
-        User currentUser = null;
-        FileInputStream fileIn = new FileInputStream(filename);
-        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        currentUser = (User) objectIn.readObject();
-        objectIn.close();
-        fileIn.close();
-    }
-
-    void storeToFile(String filename) throws IOException {
-        FileOutputStream fileOut = new FileOutputStream(filename);
-        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-
-        users.forEach((k, v) -> {
-            if (v instanceof User) {
-                User currentUser = (User) v;
-                out.writeObject(currentUser);
-            } else {
-                Customer currentCust = (Customer) v;
-                out.writeObject(currentCust);
-            }
-        });
-        out.close();
-        fileOut.close();
-    }
-    */
-    
-    //--------- HashMap implements Serializable already -------
-    void loadFromFile(String filename) throws IOException, ClassNotFoundException {
-        //HashMap<String, User> newHashMap = null;
-        users = null;
-        FileInputStream fileIn = new FileInputStream(filename);
-        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        users = (HashMap) objectIn.readObject();
-        objectIn.close();
-        fileIn.close();
-    }
-
-
-    void storeToFile(String filename) throws IOException {
-        FileOutputStream fileOut = new FileOutputStream(filename);
-        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-        out.writeObject(users);
-        out.close();
-        fileOut.close();
-    }
+    }    
 }
