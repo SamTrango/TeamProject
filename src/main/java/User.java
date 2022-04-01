@@ -9,9 +9,15 @@
  */
 
 public class User {
-    String username;    //Stores the name of the USER.
-    String password;    //Stores the password of the USER.
-    boolean isEmployee; //TRUE if the USER is an EMPLOYEE.
+    private String username;    //Stores the name of the USER.
+    private String password;    //Stores the password of the USER.
+    private boolean isEmployee; //TRUE if the USER is an EMPLOYEE.
+
+    public User(String un, String pw, boolean employee) {
+        this.username = un;
+        this.password = pw;
+        this.isEmployee = employee;
+    }
 
     /**
      * @Description: This method will access, and RETURN the username that is
@@ -41,7 +47,12 @@ public class User {
      * instance variable, "isEmployee".
      * @return: The value "isEmployee" is set.
      */
-    public boolean isEmployee() {
-        return this.isEmployee;
+    public int isEmployee() {
+        int rv = this.isEmployee ? 1 : 0;
+        return rv;
+    }
+    
+    public String getPassword() {
+        return this.password;
     }
 }
