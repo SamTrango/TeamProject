@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class EmployeeUI extends TabPane
 {
@@ -40,8 +41,9 @@ public class EmployeeUI extends TabPane
         private ImageView mImageView;
         private Label mNameLabel, mPriceLabel;
         private Button mEditButton, mRemoveButton;
+        private Menu mMenu;
 
-        public MenuItemCell() {}
+        public MenuItemCell(Menu menu) { this.mMenu = menu; }
 
         @Override
         protected void updateItem(MenuItem item, boolean empty) {
@@ -86,6 +88,17 @@ public class EmployeeUI extends TabPane
                 GridPane.setHgrow(mEditButton, Priority.ALWAYS);
                 GridPane.setHgrow(mRemoveButton, Priority.ALWAYS);
             }
+
+            // Setup remove button
+            mRemoveButton.setOnAction(actionEvent -> {
+                Alert removeAlert = new Alert(Alert.AlertType.CONFIRMATION,
+                        String.format("Are you sure you want to remove \"%s\" from the menu?", item.getName()),
+                        ButtonType.NO, ButtonType.YES);
+
+                Optional<ButtonType> response = removeAlert.showAndWait();
+                if (response.isPresent() && response.get() == ButtonType.YES)
+                    mMenu.removeItem(item);
+            });
 
             // Configure images and labels for this item
             mImageView.setImage(item.getImg());
@@ -146,7 +159,8 @@ public class EmployeeUI extends TabPane
         });
 
         ListView<MenuItem> menuList = new ListView<>();
-        menuList.setCellFactory(listView -> new MenuItemCell());
+        menuList.setCellFactory(listView -> new MenuItemCell(mApp.getMenu()));
+        menuList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         menuList.setItems(sortedMenuList);
 

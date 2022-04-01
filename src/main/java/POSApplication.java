@@ -32,7 +32,7 @@ public class POSApplication extends Application
         ArrayList<String> ingredients1 = new ArrayList<>(Arrays.asList("Tomatoes", "Potatoes"));
         mMenu.addItem(new MenuItem("BItem 1", ingredients1, "./food_images/salsa.jpg", 1.00, 10));
         mMenu.addItem(new MenuItem("CItem 2", ingredients1, "./food_images/salsa.jpg", 5.00, 5));
-        mMenu.addItem(new MenuItem("AItem 3", ingredients1, "./food_images/mug.jpg", 2.50, 20));
+        mMenu.addItem(new MenuItem("AItem 3", ingredients1, "./food_images/salsa.jpg", 2.50, 20));
     }
 
     public void loggedIn(User user) {
