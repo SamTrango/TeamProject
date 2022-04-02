@@ -47,12 +47,12 @@ public class Order {
         items.replace(item, count + 1); //Replace old key with ne key with incremented value
     }
 
-    public void removeFromCart(MenuItem item){
+    public void removeFromCart(MenuItem item, boolean removeAll){
         Integer count = items.get(item);
         if(count == null)
             return;
 
-        if (count == 1)
+        if (count == 1 || removeAll)
             items.remove(item);
         else  
             items.replace(item, count - 1);
