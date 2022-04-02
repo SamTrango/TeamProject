@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Order {
-    private Map<MenuItem, Integer> items = new HashMap<MenuItem, Integer>();
+    private Map<MenuItem, Integer> items = new HashMap<MenuItem, Integer>(); //Ian is a bitch and wants me to make this an observable map
     private boolean _hasCoupon = false;
     private double _discountPercentage;
     private String _username;
@@ -39,6 +39,9 @@ public class Order {
         return _username;
     }
 
+    public int getMenuItemAmount(MenuItem item){
+        return items.get(item);
+    }
     public void addToCart(MenuItem item){
         // Fetch the current count or put in a 1 if this is the addition
         Integer count =  items.putIfAbsent(item,1);
@@ -57,7 +60,7 @@ public class Order {
         else  
             items.replace(item, count - 1);
     }
-
+    //Change to ObservableList
     public List<MenuItem> getItems(){//Create a list of MenuItems in Order
         ArrayList<MenuItem> orderItems = new ArrayList<MenuItem>();
         for (Map.Entry<MenuItem,Integer> entry : items.entrySet()){ 
@@ -87,6 +90,10 @@ public class Order {
             waitTime += entry.getValue()*entry.getKey().getPrepareTime();
         }
         return waitTime;
+    }
+
+    public boolean isInCart(MenuItem item){
+        return items.containsKey(item);
     }
 
 }

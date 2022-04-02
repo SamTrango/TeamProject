@@ -10,6 +10,7 @@ public class OrderQueue {
     public OrderQueue(Menu menu){
         _menu = menu;
     }
+
     public void loadFromFile(String file) throws FileNotFoundException {
         File orderFile = new File(file);
         Scanner scanner = new Scanner(orderFile);

@@ -1,8 +1,11 @@
-import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.application.Application;
+import javafx.stage.Window;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * JavaFX App
@@ -14,9 +17,10 @@ public class POSApplication extends Application
     private final OrderQueue mOrderQueue;
     private User mLoggedInUser;
     private LoginUI mLoginUI;
-    private final OrderUI mOrderUI;
-    private final EmployeeUI mEmployeeUI;
+    private OrderUI mOrderUI;
+    private EmployeeUI mEmployeeUI;
 
+    private Stage mStage;
     private Scene mScene;
 
     public POSApplication() {
@@ -24,9 +28,11 @@ public class POSApplication extends Application
         mMenu = new Menu();
         mOrderQueue = new OrderQueue(mMenu);
         mLoggedInUser = null;
-        mLoginUI = new LoginUI(this);
-        mOrderUI = new OrderUI(this);
-        mEmployeeUI = new EmployeeUI(this);
+
+        String[] ingredients1 = {"Tomatoes", "Potatoes"};
+        mMenu.addItem(new MenuItem("BItem 1", ingredients1, "./food_images/salsa.jpg", 1.00, 10));
+        mMenu.addItem(new MenuItem("CItem 2", ingredients1, "./food_images/salsa.jpg", 5.00, 5));
+        mMenu.addItem(new MenuItem("AItem 3", ingredients1, "./food_images/salsa.jpg", 2.50, 20));
     }
 
     public void loggedIn(User user) {
@@ -52,15 +58,24 @@ public class POSApplication extends Application
         return mLoggedInUser;
     }
 
+    public Window getWindow() { return mStage; }
+
     @Override
     public void start(Stage stage) {
-        mScene = new Scene(mOrderUI, 640, 480);
+        mStage = stage;
+
+        // Create user interface classes
+        mLoginUI = new LoginUI(this);
+        mOrderUI = new OrderUI(this);
+        mEmployeeUI = new EmployeeUI(this);
+
+        // Create a new scene and show the UI
+        mScene = new Scene(mOrderUI, 720, 600);
         stage.setScene(mScene);
         stage.show();
     }
 
     public static void main(String[] args) {
-        
         launch();
     }
 }

@@ -1,14 +1,31 @@
-import javafx.collections.FXCollections;
 import javafx.geometry.*;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.*;
-
+import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
     private POSApplication app;
-    private Order inProgressOrder;
+    private Order inProgressOrder = new Order(true, .4, "IanGay");
+
+    public class MenuListObserver extends MenuListView.Observer{
+        @Override
+        public void addToCartUpdated(MenuItem item, boolean isChecked) {
+            if (isChecked){
+                inProgressOrder.addToCart(item);
+            }
+            else{
+                inProgressOrder.removeFromCart(item, true);
+            }
+
+        }
+        @Override
+        public void viewIngredientsPressed(MenuItem item) {
+            showDetailedView(item);
+        }
+    }
 
     public OrderUI(POSApplication app) {
         this.app = app;
@@ -16,88 +33,103 @@ public class OrderUI extends StackPane {
     }
 
     private void showMenuAndCart() {
-        //Menu UI Components
         SplitPane splitPane = new SplitPane();
-        
         VBox menu = new VBox(new Label("Menu"));
-        menu.setFillWidth(true);
-        menu.setBackground(new Background(new BackgroundFill(Color.RED, new CornerRadii(0), Insets.EMPTY)));
-        //placeholder for menu
-        VBox menuList = new VBox();
-        
-
+        VBox cart = new VBox(new Label("Cart"));
+        VBox menuList = new MenuListView(app.getMenu(), inProgressOrder, new MenuListObserver(), true);
         Button but_logOut = new Button("Log Out");
-        but_logOut.setMaxWidth(Double.MAX_VALUE);
-        but_logOut.setFont(new Font(15));
-        but_logOut.setAlignment(Pos.BOTTOM_CENTER);
-        VBox.setVgrow(but_logOut, Priority.ALWAYS);
-        but_logOut.setOnAction((event) -> { 
-            getChildren().clear();
-            //app.loggedOut(); // Actual implementation
-        });
-
-
-        menu.getChildren().addAll(menuList,but_logOut);
-        //Cart UI Components
-        VBox cart = new VBox();
-
-        ListView<MenuItem> orderList = new ListView<MenuItem>();
-        orderList.setItems(FXCollections.observableArrayList(new MenuItem("name", "imagSrc", 1, 1), new MenuItem("name", "imagSrc", 1, 1))); ////remove after testing
-        orderList.setCellFactory(lv -> new CustomCell());
-        VBox.setVgrow(orderList, Priority.ALWAYS);
-
+        Button but_order = new Button("Order");
         Label lab_total = new Label();
+        ListView<MenuItem> orderList = new ListView<MenuItem>();
+
+        orderList.setCellFactory(lv -> new CustomCell());
         lab_total.setText(String.format("Total: $%.2f", 1.1)); //remove after testing
         //lab_total.setText(String.format("Total: $%.2f" + inProgressOrder.calculateTotalPrice()); // Actual implementation
-
-        lab_total.setFont(new Font(15));
-
-        Button but_order = new Button("Order");
-        but_order.setFont(new Font(15));
+        
+        but_logOut.setAlignment(Pos.BOTTOM_CENTER);
+        VBox.setVgrow(orderList, Priority.ALWAYS);
+        VBox.setVgrow(menuList, Priority.ALWAYS);
+        but_logOut.setMaxWidth(Double.MAX_VALUE);
         but_order.setMaxWidth(Double.MAX_VALUE);
+        menu.setPadding(new Insets(5,5,5,5));
+        cart.setPadding(new Insets(5,5,5,5));
+        splitPane.setDividerPositions(.6);
+        but_logOut.setFont(new Font(15));
+        lab_total.setFont(new Font(15));
+        but_order.setFont(new Font(15));
+        menu.setFillWidth(true);
+        menu.setSpacing(5);
+        cart.setSpacing(5);
+
+        but_logOut.setOnAction((event) -> { 
+            getChildren().clear();
+            app.loggedOut();
+        });
+
         but_order.setOnAction((event) -> {
             getChildren().clear();
             showOrderProgress();
         });
-        cart.getChildren().addAll(new Label("Cart"), orderList, lab_total, but_order);
-        
+
+        menu.getChildren().addAll(menuList,but_logOut);
+        cart.getChildren().addAll( orderList, lab_total, but_order);
         splitPane.getItems().addAll(menu,cart);
-        splitPane.setDividerPositions(.6);
         getChildren().add(splitPane);
     }
 
     private void showOrderProgress() {
         VBox vBox = new VBox();
         Text txt_Msg = new Text("We're working on your order!");
-        txt_Msg.setFont(new Font(30));
         Text txt_Pos = new Text("Position in line: #" );
-        txt_Pos.setFont(new Font(30));
         Text txt_EstTime = new Text("Estimated Wait Time: ");
-        txt_EstTime.setFont(new Font(30));
         Button but_Cancel = new Button("Cancel Order");
+
+        txt_Msg.setFont(new Font(30));
+        txt_Pos.setFont(new Font(30));
+        txt_EstTime.setFont(new Font(30));
         but_Cancel.setFont(new Font(30));
+
         but_Cancel.setOnAction((event)->{
             getChildren().clear();
             showMenuAndCart();
         });
+
         vBox.getChildren().addAll(txt_Msg, txt_Pos, txt_EstTime, but_Cancel);
         vBox.setAlignment(Pos.CENTER);
         vBox.setSpacing(5);
+
         getChildren().add(vBox);
-        
     }
 
     private void showDetailedView(MenuItem item) {
+        Stage stage = new Stage();
+        BorderPane bPane = new BorderPane();
+        Scene scene = new Scene(bPane, 500, 500);
+        ImageView img = new ImageView(item.getImg());
+        ListView<String> ingredients = new ListView<>();
+
+        BorderPane.setMargin(img, new Insets(5,5,5,5));
+        BorderPane.setMargin(ingredients, new Insets(5,5,5,0));
+        BorderPane.setAlignment(img, Pos.CENTER);
+        img.setFitWidth(200);
+        img.setFitHeight(200);
         
+
+        ingredients.getItems().addAll(item.getIngredients());
+        bPane.setLeft(img);
+        bPane.setCenter(ingredients);
+        stage.setScene(scene);
+        stage.setTitle("Ingredients in " + item.getName());
+        stage.show();
     }
 
-    private BorderPane createOrderList(String itemName, int itemAmount, double itemPrice){//remove after testing
-    //private BorderPane createOrderList(MenuItem item){ //actual implementation
+    //private BorderPane createOrderList(String itemName, int itemAmount, double itemPrice){//remove after testing
+    private BorderPane createOrderList(MenuItem item){ //actual implementation
         BorderPane bPane = new BorderPane();
         bPane.setPadding(new Insets(3, 3, 3, 3));
 
-        Label txt_itemName = new Label(itemName);//remove after testing
-        //Label txt_itemName = new Label(item); //actual implementation
+        //Label txt_itemName = new Label(itemName);//remove after testing
+        Label txt_itemName = new Label(item.getName()); //actual implementation
         txt_itemName.setTextAlignment(TextAlignment.CENTER);
         txt_itemName.setFont(new Font(20));
         
@@ -113,8 +145,8 @@ public class OrderUI extends StackPane {
             //inProgressOrder.removeFromCart(item, false); // Actual implementation
         });
 
-        TextField txt_itemAmount = new TextField(Integer.toString(itemAmount));
-        //TextField txt_itemAmount = new TextField(Integer.toString(itemAmount)); // Actual implementation
+        //TextField txt_itemAmount = new TextField(Integer.toString(itemAmount));
+        TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); // Actual implementation
         txt_itemAmount.setFont(new Font(20));
         txt_itemAmount.setAlignment(Pos.CENTER);
         txt_itemAmount.setPrefWidth(50);
@@ -128,7 +160,7 @@ public class OrderUI extends StackPane {
 
         Text txt_itemTotalPrice = new Text();
         txt_itemTotalPrice.setFont(new Font(20));
-        txt_itemTotalPrice.setText(String.format("$%.2f",itemAmount*itemPrice));//remove after testing
+        txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.calculateTotalPrice()));//remove after testing
         //txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item))); //actual implementation
         txt_itemTotalPrice.setTextAlignment(TextAlignment.CENTER);
 
@@ -156,8 +188,8 @@ public class OrderUI extends StackPane {
             if(item == null) 
                 return;
 
-            BorderPane bPane = createOrderList("itemName", 1, .5); //remove after testing
-            //BorderPane bPane = createOrderList(item); //actual implementation
+            //BorderPane bPane = createOrderList("itemName", 1, .5); //remove after testing
+            BorderPane bPane = createOrderList(item); //actual implementation
             setGraphic(bPane);
         }
     }
