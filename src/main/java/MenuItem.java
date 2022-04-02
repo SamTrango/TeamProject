@@ -10,9 +10,9 @@ public class MenuItem {
     private int prepareTime;
     private Image image = null;
 
-    public MenuItem(String name, ArrayList<String> ingredients, String imageSrc, double price, int prepareTime) {
+    public MenuItem(String name, String[] ingredients, String imageSrc, double price, int prepareTime) {
         this.name = name;
-        this.ingredients = ingredients;
+        this.ingredients = new ArrayList<>(List.of(ingredients));
         this.imageSrc = imageSrc;
         this.price = price;
         this.prepareTime = prepareTime;
@@ -46,6 +46,6 @@ public class MenuItem {
 
     }
     public void setPrice(double price){
-
+        this.price = price;
     }
 }
