@@ -1,6 +1,8 @@
+
 /**
  * @Title: UserDatabase.java
  * @Author: Sam Kacprowicz 
+ * @Date: 3/31/2022
  * @Description: This class will contain a HashMap that will function as the database used to store the USER objects.
  * The class contains functionality to write the HashMap to a file, and read from that file, each via serialization.
  */

@@ -1,7 +1,7 @@
 /**
  * @Title: User.java
  * @Author: Sam Kacprowicz
- * @Date:3/22/2022
+ * @Date:3/31/2022
  * @Description: This class will represent a USER of the POS system. It will feature methods
  * that will RETURN the username, verify the USER's password, and check to see if the USER is
  * an EMPLOYEE. The CUSTOMER class is a child of this class, however the EMPLOYEE class
