@@ -70,7 +70,7 @@ public class POSApplication extends Application
         mEmployeeUI = new EmployeeUI(this);
 
         // Create a new scene and show the UI
-        mScene = new Scene(mEmployeeUI, 640, 480);
+        mScene = new Scene(mEmployeeUI, 720, 600);
         stage.setScene(mScene);
         stage.show();
     }
