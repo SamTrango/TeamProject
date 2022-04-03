@@ -1,7 +1,10 @@
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javafx.scene.image.Image;
+
 public class MenuItem {
     public String name;
     private ArrayList<String> ingredients;
@@ -19,13 +22,18 @@ public class MenuItem {
     }
 
     public String getName(){
-        return name;
+        return _name;
     }
     public List<String> getIngredients(){
-        return ingredients;
+        return _ingredients;
     }
     public String getImgSrc(){
-        return imageSrc;
+        return _imageSrc;
+    }
+    public Image getImg(){
+        if(image == null)
+            image = new Image(getImgSrc());
+        return image;
     }
     public Image getImg(){
         // Prevent the application from crashing if the image is missing
@@ -38,7 +46,10 @@ public class MenuItem {
         return image;
     }
     public double getPrice(){
-        return price;
+        return _price;
+    }
+    public int getPrepareTime(){
+        return _prepareTime;
     }
     public void setName(String name){
 

@@ -10,7 +10,7 @@
 
 import java.io.Serializable;
 
-public class User implements Serializable{
+public class User implements Serializable {
     private String username;    //Stores the name of the USER.
     private String password;    //Stores the password of the USER.
     private boolean isEmployee; //TRUE if the USER is an EMPLOYEE.

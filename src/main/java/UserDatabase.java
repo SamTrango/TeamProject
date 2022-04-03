@@ -96,5 +96,5 @@ public class UserDatabase {
      */
     Collection<User> getUser() {
         return users.values();
-    }    
+    }
 }
