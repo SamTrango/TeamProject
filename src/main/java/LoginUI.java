@@ -11,27 +11,30 @@
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
-public class LoginUI extends BorderPane {
+public class LoginUI extends VBox {
     private POSApplication _posApp;
+    private BorderPane _mainScreen, _createAccountScreen;
 
     public LoginUI(POSApplication app) {
         _posApp = app;
+        setFillWidth(true);
+        resetUI();
+    }
 
-        // Add padding to our main GridPane, enable grid lines for debugging
-        setPadding(new Insets(15, 15, 15, 15));
-        
+    private void resetMainScreen() {
+        _mainScreen = new BorderPane();
+        VBox.setVgrow(_mainScreen, Priority.ALWAYS);
+
+        // Add padding to our main BorderPane
+        _mainScreen.setPadding(new Insets(15, 15, 15, 15));
+
         // Create the title label
         Label titleLabel = new Label("Restaurant Name");
         titleLabel.setFont(new Font(40));
@@ -47,7 +50,7 @@ public class LoginUI extends BorderPane {
         GridPane.setHgrow(usernameField, Priority.ALWAYS);
 
         Label passwordLabel = new Label("Password:");
-        TextField passwordField = new TextField();
+        PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter your password");
         GridPane.setHgrow(passwordField, Priority.ALWAYS);
 
@@ -65,76 +68,176 @@ public class LoginUI extends BorderPane {
 
         bottomButtons.getColumnConstraints().addAll(constraints, constraints);
 
-        Button createAccountButton = new Button("Create Account");
+        Button createAccountButton = new Button("Create New Account");
         createAccountButton.setMaxWidth(Double.MAX_VALUE);
-        createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                // Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
-                // alert.showAndWait();
-                Stage stage2 = new Stage();  //links create account button to createAccountUI that pops up
-                BorderPane bp = new createAccountUI(app);
-                //stage.show();
-                Scene scene2 = new Scene(bp);
-                stage2.setScene(scene2);
-                stage2.show();
-
-            }
+        createAccountButton.setOnAction(arg0 -> {
+            // Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
+            // alert.showAndWait();
+            resetAccountCreationScreen();
+            getChildren().setAll(_createAccountScreen);
         });
 
         Button loginButton = new Button("Login");
         loginButton.setMaxWidth(Double.MAX_VALUE);
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                // Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
-                // alert.showAndWait();
+        loginButton.setOnAction(arg0 -> {
+            User user = _posApp.getUsers().lookupUser(usernameField.getText());
+
+            // Check for valid username and password
+            if (user != null && user.verifyPassword(passwordField.getText())) {
+                _posApp.loggedIn(user); // Tell the main application that we are done logging in
+            } else {
+                // Notify the user that their login info is incorrect
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid login info, Please try again", ButtonType.OK);
+                alert.showAndWait();
             }
         });
 
         bottomButtons.add(createAccountButton, 0, 0);
         bottomButtons.add(loginButton, 1, 0);
 
-        setTop(titleLabel);
-        setCenter(userInput);
-        setBottom(bottomButtons);
+        _mainScreen.setTop(titleLabel);
+        _mainScreen.setCenter(userInput);
+        _mainScreen.setBottom(bottomButtons);
     }
 
-    private void showMainScreen() {
+    private void resetAccountCreationScreen() {
+        _createAccountScreen = new BorderPane();
+        VBox.setVgrow(_createAccountScreen, Priority.ALWAYS);
 
-        // Example of checking login information
-        String username = "";
-        String password = "";
+        // Add padding to our main BorderPane
+        _createAccountScreen.setPadding(new Insets(15, 15, 15, 15));
 
-        User user = _posApp.getUsers().lookupUser(username);
+        // Create the title label
+        Label titleLabel = new Label("Account Creation");
+        titleLabel.setFont(new Font(20));
+        BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
-        // Check for valid username and password
-        if (user != null && user.verifyPassword(password)) {
-            _posApp.loggedIn(user); // Tell the main application that we are done logging in
-        } else {
-            // Notify the user that their login info is incorrect
-            Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
-            alert.showAndWait();
+        GridPane userInput = new GridPane();
+        userInput.setHgap(10);
+        userInput.setVgap(10);
+
+        String[] fieldNames = {"Username", "Password", "Address", "Phone Number", "Credit Card #"};
+        TextField[] fields = new TextField[5];
+
+        // Create all labels and text fields
+        for (int i = 0; i < fieldNames.length; i++) {
+            Label label = new Label(fieldNames[i] + ":");
+            TextField field = new TextField();
+            field.setPromptText("Enter your " + (fieldNames[i].toLowerCase()));
+            GridPane.setHgrow(field, Priority.ALWAYS);
+
+            fields[i] = field;
+
+            userInput.add(label, 0, i);
+            userInput.add(field, 1, i);
         }
-    }
+      
+        userInput.setAlignment(Pos.CENTER);
 
-    private void showAccountCreation() {
-        // Example of creating a new user
+        // Create CC labels and text fields
+        ComboBox<Integer> monthBox = new ComboBox<>();
+        for (int i = 1; i <= 12; i++)
+            monthBox.getItems().add(i);
 
-        // Ensure that the new account username is unique
-        if (_posApp.getUsers().lookupUser("PutEnteredUsernameHere") != null) {
+        ComboBox<Integer> yearBox = new ComboBox<>();
+        for (int i = 0; i <= 99; i++)
+            yearBox.getItems().add(i);
+
+        Label label = new Label("Credit Card Expiration Date: ");
+        HBox hBox = new HBox();
+        hBox.setFillHeight(true);
+        hBox.setSpacing(5);
+        hBox.setAlignment(Pos.CENTER);
+
+        Label slash = new Label("/");
+        slash.setFont(new Font(16));
+
+        Label cvvLabel = new Label("\tCVV: ");
+        TextField cvvField = new TextField();
+        cvvField.setPromptText("Enter the CVV");
+
+        hBox.getChildren().addAll(monthBox, slash, yearBox, cvvLabel, cvvField);
+
+        userInput.add(label, 0, fieldNames.length);
+        userInput.add(hBox, 1, fieldNames.length);
+
+        GridPane bottomButtons = new GridPane();
+        bottomButtons.setHgap(10);
+
+        ColumnConstraints constraints = new ColumnConstraints();
+        constraints.setPercentWidth(50);
+
+        bottomButtons.getColumnConstraints().addAll(constraints, constraints);
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setMaxWidth(Double.MAX_VALUE);
+        cancelButton.setOnAction(arg0 -> resetUI());
+
+        Button finishButton = new Button("Finish");
+        finishButton.setMaxWidth(Double.MAX_VALUE);
+        finishButton.setOnAction(arg0 -> {
+            // Make sure that none of the fields are blank
+            for (int i = 0; i < fieldNames.length; i++) {
+                if (fields[i].getText().isBlank()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "The " + fieldNames[i] + " field must be filled in",
+                            ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            if (monthBox.getSelectionModel().getSelectedItem() == null ||
+                    yearBox.getSelectionModel().getSelectedItem() == null ||
+                    cvvField.getText().isBlank()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The credit card info must be filled in",
+                        ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+
+            // Ensure that the new account username is unique
+            if (_posApp.getUsers().lookupUser(fields[0].getText()) != null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The entered username is already taken",
+                        ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+
+            // Make sure that security code is a number
+            int cvv;
+            try {
+                cvv = Integer.parseInt(cvvField.getText().strip());
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid CVV, Please try again",
+                        ButtonType.OK);
+                alert.showAndWait();
+                return;
+            }
+
             // Get new account info from UI and create a new Customer
-            CreditCardInfo ccInfo = new CreditCardInfo("CreditCardNumber", 0, 0, 0);
-            Customer newCustomer = new Customer("Username", "Password", "Address", "PhoneNumber", ccInfo);
+            CreditCardInfo ccInfo =
+                    new CreditCardInfo(fields[4].getText(), monthBox.getValue(), yearBox.getValue(), cvv);
+            Customer newCustomer =
+                    new Customer(fields[0].getText(), fields[1].getText(), fields[2].getText(),
+                            fields[3].getText(), ccInfo);
 
             // Add the new user to the user database
             _posApp.getUsers().addUser(newCustomer);
-        } else {
-            // Error because the username is already taken
-        }
+
+            // Log in
+            _posApp.loggedIn(newCustomer);
+        });
+
+        bottomButtons.add(cancelButton, 0, 0);
+        bottomButtons.add(finishButton, 1, 0);
+
+        _createAccountScreen.setTop(titleLabel);
+        _createAccountScreen.setCenter(userInput);
+        _createAccountScreen.setBottom(bottomButtons);
     }
 
-    public void startLogin() {
-
+    public void resetUI() {
+        resetMainScreen();
+        getChildren().setAll(_mainScreen);
     }
 }
