@@ -1,14 +1,12 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Order {
-    private Map<MenuItem, Integer> _items = new HashMap<MenuItem, Integer>(); //Ian is a bitch and wants me to make this an observable map
-    private ObservableList<MenuItem> _observableList;
-    private boolean _hasCoupon = false;
+    private Map<MenuItem, Integer> _items = new HashMap<MenuItem, Integer>();
+    private ObservableList<MenuItem> _observableList = FXCollections.observableArrayList();
+    private boolean _hasCoupon;
     private double _discountPercentage;
     private String _username;
 
@@ -16,7 +14,6 @@ public class Order {
         _hasCoupon = hasCoupon;
         _discountPercentage = discountPercentage;
         _username = username;
-        _observableList = getItems();
     }
 
     public void setHasCoupon(boolean hasCoupon){
@@ -50,46 +47,55 @@ public class Order {
     public int getMenuItemAmount(MenuItem item){
         return _items.get(item);
     }
+
+    public ObservableList<MenuItem> getItems(){
+        return _observableList;
+    }
+
     public void addToCart(MenuItem item){
         // Fetch the current count or put in a 1 if this is the addition
         Integer count =  _items.putIfAbsent(item,1);
-        if (count == null)
+        if (count == null){
+            _observableList.add(item);
             return;
+        }
         _items.replace(item, count + 1); //Replace old key with new key with incremented value
     }
 
     public void removeFromCart(MenuItem item, boolean removeAll){
         Integer count = _items.get(item);
-        if(count == null)
+        if (count == null)
             return;
 
-        if (count == 1 || removeAll)
+        if (count == 1 || removeAll){
             _items.remove(item);
-        else  
+            _observableList.remove(item);
+        } else {
             _items.replace(item, count - 1);
-    }
-
-    public ObservableList<MenuItem> getItems(){//Create a ObservableList of MenuItems in Order
-        List<MenuItem> orderItems = new ArrayList<MenuItem>();
-        for (Map.Entry<MenuItem,Integer> entry : _items.entrySet()){ 
-            orderItems.add(entry.getKey());
         }
-        return FXCollections.observableList(orderItems);
     }
 
     public double priceForItem(MenuItem item){
         return item.getPrice() * _items.get(item); // Item Price * # of items in Order
     }
 
-    public double calculateTotalPrice(){
-        double total = 0;
+    public double calculateSubtotalPrice(){
+        double subtotal = 0;
         for (Map.Entry<MenuItem,Integer> entry : _items.entrySet()){ //Add total of all items in Order
-            total += entry.getValue()*entry.getKey().getPrice();
+            subtotal += entry.getValue()*entry.getKey().getPrice();
         }
-        if(_hasCoupon){//Apply coupon discount,if applicaable
-            total = total * (1 - _discountPercentage); 
-        }
-        return total;
+        return subtotal;
+    }
+
+    public double calculateDiscountPrice(){
+        if (!_hasCoupon)
+            return 0.0;
+
+        return calculateSubtotalPrice() * (1-_discountPercentage);
+    }
+
+    public double calculateTotalPrice(){
+        return calculateSubtotalPrice() - calculateDiscountPrice();
     }
 
     public int calculateTotalWaitTime(){

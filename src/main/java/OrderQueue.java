@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class OrderQueue {
     private ArrayList<Order> orderQueue = new ArrayList<>();
     private Menu _menu;
+    
     public OrderQueue(Menu menu){
         _menu = menu;
     }
