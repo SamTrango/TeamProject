@@ -56,6 +56,7 @@ public class MenuItem {
     }
     public void setImgSrc(String source){
         this.imageSrc = source;
+        this.image = null;
     }
     public void setPrice(double price){
         this.price = price;

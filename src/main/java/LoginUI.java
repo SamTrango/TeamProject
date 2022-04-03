@@ -9,9 +9,6 @@
  * 
  */
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -19,7 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 public class LoginUI extends VBox {
-    private POSApplication _posApp;
+    private final POSApplication _posApp;
     private BorderPane _mainScreen, _createAccountScreen;
 
     public LoginUI(POSApplication app) {
