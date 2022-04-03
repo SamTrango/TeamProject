@@ -27,6 +27,8 @@ public class POSApplication extends Application
         mMenu = new Menu();
         mOrderQueue = new OrderQueue(mMenu);
         mLoggedInUser = null;
+
+        mMenu.loadFromFile("Menu.txt");
     }
 
     public void loggedIn(User user) {
@@ -37,6 +39,7 @@ public class POSApplication extends Application
             mScene.setRoot(mEmployeeUI);
             mStage.setTitle("POS - Employee View");
         } else {
+            mOrderUI.resetUI();
             mScene.setRoot(mOrderUI);
             mStage.setTitle("POS - Customer View");
         }
