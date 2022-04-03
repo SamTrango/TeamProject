@@ -32,7 +32,7 @@ public class OrderUI extends StackPane {
 
         // Retrieve an in progress order, if one exists
         boolean found = false;
-        for(Order order : app.getOrderQueue().getOrderQueue()){
+        for(Order order : app.getOrderQueue().getOrderQueueList()){
             if (order.getUsername().equals(app.getLoggedInUser().getUsername())) {
                 inProgressOrder = order;
                 found = true;
@@ -40,9 +40,11 @@ public class OrderUI extends StackPane {
             }
         }
 
-        if (!found)
+        if (!found){
             inProgressOrder = new Order(false, 0.15, "Test");
-
+            app.getOrderQueue().addOrder(inProgressOrder);
+        }
+            
         showMenuAndCart();
     }
 
@@ -57,7 +59,7 @@ public class OrderUI extends StackPane {
         ListView<MenuItem> orderList = new ListView<MenuItem>();
         orderList.setCellFactory(lv -> new CustomCell());
         orderList.setItems(inProgressOrder.getItems());
-        lab_total.setText(String.format("Total: $%.2f", inProgressOrder.calculateTotalPrice())); // Actual implementation
+        lab_total.setText(String.format("Total: $%.2f", inProgressOrder.calculateTotalPrice())); 
         
         but_logOut.setAlignment(Pos.BOTTOM_CENTER);
         VBox.setVgrow(orderList, Priority.ALWAYS);
@@ -93,7 +95,7 @@ public class OrderUI extends StackPane {
     private void showOrderProgress() {
         VBox vBox = new VBox();
         Text txt_Msg = new Text("We're working on your order!");
-        Text txt_Pos = new Text("Position in line: " );
+        Text txt_Pos = new Text("Position in line: " + findPositionInLine());
         Text txt_EstTime = new Text("Estimated Wait Time: " + convertWaitTime());
         Button but_Cancel = new Button("Cancel Order");
 
@@ -136,7 +138,7 @@ public class OrderUI extends StackPane {
         stage.show();
     }
 
-    private BorderPane createOrderList(MenuItem item){
+    private BorderPane createOrderList(MenuItem item){//Creates MeueItems in the cart
         BorderPane bPane = new BorderPane();
         bPane.setPadding(new Insets(3, 3, 3, 3));
 
@@ -156,7 +158,7 @@ public class OrderUI extends StackPane {
             inProgressOrder.removeFromCart(item, false);
         });
 
-        TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); // Actual implementation
+        TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); 
         txt_itemAmount.setEditable(false);
         txt_itemAmount.setFont(new Font(20));
         txt_itemAmount.setAlignment(Pos.CENTER);
@@ -171,7 +173,7 @@ public class OrderUI extends StackPane {
 
         Text txt_itemTotalPrice = new Text();
         txt_itemTotalPrice.setFont(new Font(20));
-        txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item))); //actual implementation
+        txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item)));
         txt_itemTotalPrice.setTextAlignment(TextAlignment.CENTER);
 
         HBox hbox1 = new HBox(but_RemoveItem,txt_itemName);
@@ -191,7 +193,7 @@ public class OrderUI extends StackPane {
         return bPane;
     }
 
-    private class CustomCell extends ListCell<MenuItem>{
+    private class CustomCell extends ListCell<MenuItem>{ //Custom Cell class for ListView
         @Override
         public void updateItem(MenuItem item, boolean empty){
             super.updateItem(item,empty);
@@ -202,8 +204,19 @@ public class OrderUI extends StackPane {
             setGraphic(bPane);
         }
     }
+    
+    private int findPositionInLine(){//searches Order Queue list for inProgressOrder and return the positionInLine
+        int PositionInLine = 1;
+        for (Order order: app.getOrderQueue().getOrderQueueList()){
+            if (order.equals(inProgressOrder)){
+                return PositionInLine;
+            }
+            PositionInLine++;
+        }
+        return 0;
+    }
 
-    private String convertWaitTime(){
+    private String convertWaitTime(){//Converts wait time minutes to hours and minutes
         int hours = (int)Math.floor(inProgressOrder.calculateTotalWaitTime()/60.0);
         int minutes = inProgressOrder.calculateTotalWaitTime() % 60;
         if (hours != 0){

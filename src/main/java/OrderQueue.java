@@ -39,7 +39,7 @@ public class OrderQueue {
         scanner.close();
     }
 
-    public List<Order> getOrderQueue(){
+    public List<Order> getOrderQueueList(){
         return orderQueue;
     }
 
