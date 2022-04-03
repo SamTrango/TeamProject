@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,6 +42,9 @@ public class Menu{
     }
 
     public void storeToFile(String file) throws IOException{
+        //Store to file format:
+        //itemName,itemPrice,itemWaitTime,itemImgSrc
+        //itemIngredient1,itemIngredient2,...
         FileWriter fw = new FileWriter(file);
         for(int i = 0; i < items.size();i++){
             fw.write(items.get(i).getName() + "," +
