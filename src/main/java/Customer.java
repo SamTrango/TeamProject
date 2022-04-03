@@ -27,7 +27,7 @@ public class Customer extends User {
         return _address;
     }
     
-    public String getPhoneNUmber() {
+    public String getPhoneNumber() {
         return _phoneNumber;
 
     }
@@ -51,8 +51,5 @@ public class Customer extends User {
     
     public void removeCoupon() {
         _numberOfCoupons--;
-        
-    }
-    
-    
+    } 
 }

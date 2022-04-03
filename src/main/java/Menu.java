@@ -1,7 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Menu {
-    private ArrayList<MenuItem> items;
+    private ObservableList<MenuItem> items = FXCollections.observableArrayList();
 
     public void loadFromFile(String file){
 
@@ -12,14 +13,14 @@ public class Menu {
     }
 
     public void addItem(MenuItem name){
-
+        items.add(name);
     }
 
     public void removeItem(MenuItem name){
-
+        items.remove(name);
     }
 
-    public List<MenuItem> getItems(){
+    public ObservableList<MenuItem> getItems(){
         return items;
     }
 

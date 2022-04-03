@@ -7,9 +7,8 @@
  *
  * @author daniel
  */
-import java.util.Date;
 
-public class CreditCardInfo {
+public class CreditCardInfo implements Serializable {
 
     private String _ccnumber;
     private int _month;
@@ -17,10 +16,10 @@ public class CreditCardInfo {
     private int _code;
 
     public CreditCardInfo(String ccNum, int month, int year, int secCode) {
-            _ccnumber = ccNum;
-            _month = month;
-            _year = year;
-            _code = secCode;
+        _ccnumber = ccNum;
+        _month = month;
+        _year = year;
+        _code = secCode;
     }
 
     public String getNumber() {
