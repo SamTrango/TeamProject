@@ -116,7 +116,6 @@ public class LoginUI extends BorderPane {
             Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
             alert.showAndWait();
         }
-     
     }
 
     private void showAccountCreation() {

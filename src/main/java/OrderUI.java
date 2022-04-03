@@ -57,7 +57,6 @@ public class OrderUI extends StackPane {
         ListView<MenuItem> orderList = new ListView<MenuItem>();
         orderList.setCellFactory(lv -> new CustomCell());
         orderList.setItems(inProgressOrder.getItems());
-        //lab_total.setText(String.format("Total: $%.2f", 1.1)); //remove after testing
         lab_total.setText(String.format("Total: $%.2f", inProgressOrder.calculateTotalPrice())); // Actual implementation
         
         but_logOut.setAlignment(Pos.BOTTOM_CENTER);
@@ -76,7 +75,7 @@ public class OrderUI extends StackPane {
         cart.setSpacing(5);
 
         but_logOut.setOnAction((event) -> { 
-            //getChildren().clear();
+            getChildren().clear();
             app.loggedOut();
         });
 
@@ -137,29 +136,26 @@ public class OrderUI extends StackPane {
         stage.show();
     }
 
-    //private BorderPane createOrderList(String itemName, int itemAmount, double itemPrice){//remove after testing
-    private BorderPane createOrderList(MenuItem item){ //actual implementation
+    private BorderPane createOrderList(MenuItem item){
         BorderPane bPane = new BorderPane();
         bPane.setPadding(new Insets(3, 3, 3, 3));
 
-        //Label txt_itemName = new Label(itemName);//remove after testing
-        Label txt_itemName = new Label(item.getName()); //actual implementation
+        Label txt_itemName = new Label(item.getName()); 
         txt_itemName.setTextAlignment(TextAlignment.CENTER);
         txt_itemName.setFont(new Font(20));
         
         Button but_RemoveItem = new Button("X");
         but_RemoveItem.setPrefWidth(25);
         but_RemoveItem.setOnAction((event) ->{
-            inProgressOrder.removeFromCart(item, true); // Actual implementation
+            inProgressOrder.removeFromCart(item, true);
         });
 
         Button but_SubtractItem = new Button("-");
         but_SubtractItem.setPrefWidth(25);
         but_SubtractItem.setOnAction((event) ->{
-            inProgressOrder.removeFromCart(item, false); // Actual implementation
+            inProgressOrder.removeFromCart(item, false);
         });
 
-        //TextField txt_itemAmount = new TextField(Integer.toString(itemAmount));
         TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); // Actual implementation
         txt_itemAmount.setEditable(false);
         txt_itemAmount.setFont(new Font(20));
@@ -170,12 +166,11 @@ public class OrderUI extends StackPane {
         Button but_AddItem = new Button("+");
         but_AddItem.setPrefWidth(25);
         but_AddItem.setOnAction((event) ->{
-            inProgressOrder.addToCart(item); // Actual implementation
+            inProgressOrder.addToCart(item);
         });
 
         Text txt_itemTotalPrice = new Text();
         txt_itemTotalPrice.setFont(new Font(20));
-        //txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.calculateTotalPrice()));//remove after testing
         txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item))); //actual implementation
         txt_itemTotalPrice.setTextAlignment(TextAlignment.CENTER);
 
@@ -203,8 +198,7 @@ public class OrderUI extends StackPane {
             if(item == null) 
                 return;
 
-            //BorderPane bPane = createOrderList("itemName", 1, .5); //remove after testing
-            BorderPane bPane = createOrderList(item); //actual implementation
+            BorderPane bPane = createOrderList(item); 
             setGraphic(bPane);
         }
     }
