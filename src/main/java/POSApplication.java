@@ -46,7 +46,7 @@ public class POSApplication extends Application
 
     public void loggedOut() {
         mLoggedInUser = null;
-        mScene.setRoot(mOrderUI); //changed to mOrderUi temporary to edit 
+        mScene.setRoot(mLoginUI);
         mLoginUI.startLogin();
         mStage.setTitle("POS - Login");
     }

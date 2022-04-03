@@ -61,7 +61,7 @@ public class OrderUI extends StackPane {
         orderList.setItems(inProgressOrder.getItems());
         lab_total.setText(String.format("Total: $%.2f", inProgressOrder.calculateTotalPrice())); 
         
-        but_logOut.setAlignment(Pos.BOTTOM_CENTER);
+        but_logOut.setAlignment(Pos.CENTER);
         VBox.setVgrow(orderList, Priority.ALWAYS);
         VBox.setVgrow(menuList, Priority.ALWAYS);
         but_logOut.setMaxWidth(Double.MAX_VALUE);
