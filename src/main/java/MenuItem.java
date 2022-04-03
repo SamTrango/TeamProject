@@ -28,8 +28,12 @@ public class MenuItem {
         return imageSrc;
     }
     public Image getImg(){
-        if (image == null)
-            image = new Image(getImgSrc());
+        // Prevent the application from crashing if the image is missing
+        if (image == null && !getImgSrc().isBlank()) {
+            try {
+                image = new Image(getImgSrc());
+            } catch (IllegalArgumentException ignored) {}
+        }
 
         return image;
     }

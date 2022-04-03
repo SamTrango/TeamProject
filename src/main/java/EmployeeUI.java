@@ -1,13 +1,10 @@
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,6 +19,7 @@ public class EmployeeUI extends VBox
 {
     private final POSApplication mApp;
     private AddEditMenuItemPopup mAddEditPopup;
+    private ListView<Customer> mCustomerList;
 
     public EmployeeUI(POSApplication app) {
         mApp = app;
@@ -29,7 +27,6 @@ public class EmployeeUI extends VBox
 
         // Configure the VBox
         setFillWidth(true);
-        //setSpacing(9);
 
         // Create the tab pane
         TabPane tabPane = new TabPane();
@@ -37,7 +34,9 @@ public class EmployeeUI extends VBox
         Tab customersTab = new Tab("Customers");
 
         buildMenuTab(menuTab);
+        buildCustomersTab(customersTab);
 
+        // Configure TabPane settings
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.getTabs().addAll(menuTab, customersTab);
         VBox.setVgrow(tabPane, Priority.ALWAYS);
@@ -56,10 +55,30 @@ public class EmployeeUI extends VBox
         Button logOutButton = new Button("Log Out");
         logOutButton.setMaxWidth(Double.MAX_VALUE);
         VBox.setMargin(logOutButton, new Insets(5, 10, 10, 10));
+        logOutButton.setOnAction(actionEvent -> {
+            Alert logOutAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to log out?",
+                    ButtonType.NO, ButtonType.YES);
+
+            Optional<ButtonType> response = logOutAlert.showAndWait();
+            if (response.isPresent() && response.get() == ButtonType.YES)
+                mApp.loggedOut();
+        });
 
         bottomPane.getChildren().addAll(separator, logOutButton);
-
         getChildren().addAll(tabPane, bottomPane);
+    }
+
+    public void resetUI() {
+        // Set the selected tab to the Menu tab
+        ((TabPane)getChildren().get(0)).getSelectionModel().select(0);
+
+        // Refresh the list of Customers, since we did not provide a way to update this
+        // in real-time and this will be good enough for now
+        mCustomerList.getItems().clear();
+        for (User user : mApp.getUsers().getUsers()) {
+            if (!user.isEmployee())
+                mCustomerList.getItems().add((Customer)user);
+        }
     }
 
     private class EmployeeObserver extends MenuListView.Observer
@@ -159,7 +178,7 @@ public class EmployeeUI extends VBox
 
                 // Allow the user to select an image, then verify that we can load it and store the path
                 File file = chooser.showOpenDialog(getScene().getWindow());
-                if (file.exists()) {
+                if (file != null && file.exists()) {
                     try {
                         Image img = new Image(new FileInputStream(file));
                         mImage.setImage(img);
@@ -173,6 +192,27 @@ public class EmployeeUI extends VBox
             mCancelButton.setOnAction(actionEvent -> hide());
 
             mSaveButton.setOnAction(actionEvent -> {
+                // Make sure that the name is not blank
+                if (mNameField.getText().isBlank()) {
+                    Alert noNameError = new Alert(Alert.AlertType.ERROR,
+                            "The item cannot have a blank name!", ButtonType.OK);
+
+                    noNameError.showAndWait();
+                    return;
+                }
+
+                // Make sure that the item name is not already in use
+                for (MenuItem item : mApp.getMenu().getItems()) {
+                    if (item.getName().equals(mNameField.getText()) && item != mItem) {
+                        Alert nameTakenError = new Alert(Alert.AlertType.ERROR,
+                                "There is already a menu item with the name \"" + item.getName() + "\"!",
+                                ButtonType.OK);
+
+                        nameTakenError.showAndWait();
+                        return;
+                    }
+                }
+
                 // Make sure we can parse the price
                 double price;
                 try {
@@ -229,7 +269,12 @@ public class EmployeeUI extends VBox
                 mPriceField.setText("");
                 mIngredientsArea.setText("");
                 mImageSrc = "./food_images/placeholder.png";
-                mImage.setImage(new Image(mImageSrc));
+                // Might fail if the placeholder image is not available
+                try {
+                    mImage.setImage(new Image(mImageSrc));
+                } catch (IllegalArgumentException e) {
+                    mImage.setImage(null);
+                }
             }
 
             show();
@@ -241,7 +286,6 @@ public class EmployeeUI extends VBox
         VBox vBox = new VBox();
         vBox.setSpacing(5);
         vBox.setFillWidth(true);
-        //vBox.setStyle("-fx-background-color: lightgray;");
         vBox.setPadding(new Insets(10, 10, 5, 10));
 
         MenuListView menuListView = new MenuListView(mApp.getMenu(),
@@ -256,5 +300,150 @@ public class EmployeeUI extends VBox
 
         // Add the content to the tab
         menuTab.setContent(vBox);
+    }
+
+    private static class CustomerCell extends ListCell<Customer> {
+        private GridPane mGrid = null;
+        private Label mNameLabel, mOrdersLabel, mCouponsLabel;
+        private Button mGiveCouponButton, mViewDetailsButton;
+
+        @Override
+        protected void updateItem(Customer customer, boolean empty) {
+            super.updateItem(customer, empty);
+
+            // Always set text to null, we never want to use it
+            setText(null);
+
+            // Draw nothing if this is an empty cell
+            if (empty) {
+                setGraphic(null);
+                return;
+            }
+
+            // Initialize components if this is the first time the item is being used for real
+            if (mGrid == null) {
+                mGrid = new GridPane();
+                mGrid.setHgap(5);
+                mGrid.setVgap(5);
+                mGrid.setPadding(new Insets(5, 5, 5, 5));
+
+                // Make the column distribution 50/50
+                ColumnConstraints constraints = new ColumnConstraints();
+                constraints.setPercentWidth(50);
+                mGrid.getColumnConstraints().addAll(constraints, constraints);
+
+                mNameLabel = new Label();
+                mOrdersLabel = new Label();
+                mCouponsLabel = new Label();
+                mGiveCouponButton = new Button("Give Coupon");
+                mGiveCouponButton.setMaxWidth(Double.MAX_VALUE);
+                mViewDetailsButton = new Button("View Details");
+                mViewDetailsButton.setMaxWidth(Double.MAX_VALUE);
+
+                // This is the chaos that is required in order to center a label
+                // Sacrifices had to be made, the label on the left cannot give way anymore
+                GridPane labelPane = new GridPane();
+
+                GridPane.setHalignment(mOrdersLabel, HPos.CENTER);
+                GridPane.setHalignment(mCouponsLabel, HPos.RIGHT);
+
+                labelPane.add(mNameLabel, 0, 0);
+                labelPane.add(mOrdersLabel, 1, 0);
+                labelPane.add(mCouponsLabel, 2, 0);
+
+                ColumnConstraints oneThirdConstraints = new ColumnConstraints();
+                oneThirdConstraints.setPercentWidth(33.3);
+                labelPane.getColumnConstraints().setAll(oneThirdConstraints, oneThirdConstraints, oneThirdConstraints);
+
+                mGrid.add(labelPane, 0, 0, 2, 1);
+                mGrid.add(mViewDetailsButton, 0, 1);
+                mGrid.add(mGiveCouponButton, 1, 1);
+
+                GridPane.setHgrow(mGiveCouponButton, Priority.SOMETIMES);
+                GridPane.setHgrow(mViewDetailsButton, Priority.SOMETIMES);
+            }
+
+            // Update the label text for this item
+            mNameLabel.setText(customer.getUsername());
+            mOrdersLabel.setText(String.format("Orders: %d", customer.getNumberOfOrders()));
+            mCouponsLabel.setText(String.format("Coupons: %d", customer.getNumberOfCoupons()));
+
+            // Assign the functionality for the give coupon button
+            mGiveCouponButton.setOnAction(actionEvent -> {
+                customer.addCoupon();
+                mCouponsLabel.setText(String.format("Coupons: %d", customer.getNumberOfCoupons()));
+            });
+
+            // Assign the functionality for the View Details button
+            mViewDetailsButton.setOnAction(actionEvent -> {
+                // Create a new window
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.initOwner(getScene().getWindow());
+                stage.setTitle("Details for " + customer.getUsername());
+
+                // Generate the information text
+                StringBuilder builder = new StringBuilder();
+                builder.append("Username: ");
+                builder.append(customer.getUsername());
+                builder.append("\nAddress: ");
+                builder.append(customer.getAddress());
+                builder.append("\nPhone Number: ");
+                builder.append(customer.getPhoneNumber());
+                builder.append("\n\nNumber of Orders: ");
+                builder.append(customer.getNumberOfOrders());
+                builder.append("\nNumber of Coupons: ");
+                builder.append(customer.getNumberOfCoupons());
+
+                CreditCardInfo ccInfo = customer.getCreditCardInfo();
+                if (ccInfo != null) {
+                    builder.append("\n\nCredit Card #: ");
+                    builder.append(ccInfo.getNumber());
+                    builder.append("\nCredit Card Date: ");
+                    builder.append(ccInfo.getMonth());
+                    builder.append("/");
+                    builder.append(ccInfo.getYear());
+                    builder.append("\nCVV: ");
+                    builder.append(ccInfo.getCode());
+                }
+
+                VBox vBox = new VBox();
+                vBox.setFillWidth(true);
+                vBox.setSpacing(10);
+                vBox.setPadding(new Insets(10, 10, 10, 10));
+
+                TextArea infoArea = new TextArea();
+                infoArea.setText(builder.toString());
+                infoArea.setEditable(false);
+                VBox.setVgrow(infoArea, Priority.ALWAYS);
+
+                Button closeButton = new Button("Close");
+                closeButton.setMaxWidth(Double.MAX_VALUE);
+                closeButton.setOnAction(actionEvent1 -> stage.close());
+
+                vBox.getChildren().addAll(infoArea, closeButton);
+
+                Scene scene = new Scene(vBox, 300, 300);
+                stage.setScene(scene);
+                stage.show();
+            });
+
+            // Use the grid we created as the graphic for this cell
+            setGraphic(mGrid);
+        }
+    }
+
+    private void buildCustomersTab(Tab customerTab) {
+        // Create a new VBox, which will layout our CustomerView
+        VBox vBox = new VBox();
+        vBox.setFillWidth(true);
+        vBox.setPadding(new Insets(10, 10, 5, 10));
+
+        mCustomerList = new ListView<>();
+        VBox.setVgrow(mCustomerList, Priority.ALWAYS);
+        mCustomerList.setCellFactory(customerListView -> new CustomerCell());
+
+        vBox.getChildren().addAll(mCustomerList);
+        customerTab.setContent(vBox);
     }
 }

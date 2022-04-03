@@ -13,8 +13,8 @@ public class UserDatabase {
 
     }
     
-    void addUser() {
-
+    void addUser(User user) {
+        users.put(user.getUsername(), user);
     }
     
     User lookupUser(User toLookup) {

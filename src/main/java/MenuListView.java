@@ -16,10 +16,9 @@ import java.util.Comparator;
 
 public class MenuListView extends VBox
 {
-    private Menu mMenu;
-    private Order mOrder;
-    private Observer mObserver;
-    private boolean mIsCustomerView;
+    private final Order mOrder;
+    private final Observer mObserver;
+    private final boolean mIsCustomerView;
 
     public static class Observer
     {
@@ -56,7 +55,6 @@ public class MenuListView extends VBox
                 mGrid = new GridPane();
                 mGrid.setHgap(5);
                 mGrid.setVgap(5);
-                //mGrid.setGridLinesVisible(true);
                 mGrid.setPadding(new Insets(5, 5, 5, 5));
 
                 // Create new GUI elements
@@ -69,11 +67,9 @@ public class MenuListView extends VBox
                     CheckBox checkBox = new CheckBox("Add to Cart");
                     checkBox.setPadding(new Insets(0, 0, 3, 0));
                     GridPane.setHalignment(checkBox, HPos.CENTER);
-                    checkBox.setOnAction(actionEvent -> mObserver.addToCartUpdated(item, checkBox.isSelected()));
 
                     Button viewIngredientsButton = new Button("View Ingredients");
                     viewIngredientsButton.setMaxWidth(Double.MAX_VALUE);
-                    viewIngredientsButton.setOnAction(actionEvent -> mObserver.viewIngredientsPressed(item));
 
                     mLeftNode = checkBox;
                     mRightNode = viewIngredientsButton;
@@ -81,11 +77,9 @@ public class MenuListView extends VBox
                     // Create edit and remove buttons for the employee view
                     Button editButton = new Button("Edit");
                     editButton.setMaxWidth(Double.MAX_VALUE);
-                    editButton.setOnAction(actionEvent -> mObserver.editButtonPressed(item));
 
                     Button removeButton = new Button("Remove");
                     removeButton.setMaxWidth(Double.MAX_VALUE);
-                    removeButton.setOnAction(actionEvent -> mObserver.removeButtonPressed(item));
 
                     mLeftNode = editButton;
                     mRightNode = removeButton;
@@ -105,6 +99,17 @@ public class MenuListView extends VBox
                 GridPane.setHgrow(mRightNode, Priority.ALWAYS);
             }
 
+            // Assign actions for the controls in this cell
+            if (mIsCustomerView) {
+                CheckBox checkbox = ((CheckBox)mLeftNode);
+                checkbox.setOnAction(actionEvent -> mObserver.addToCartUpdated(item, checkbox.isSelected()));
+
+                ((Button)mRightNode).setOnAction(actionEvent -> mObserver.viewIngredientsPressed(item));
+            } else {
+                ((Button)mLeftNode).setOnAction(actionEvent -> mObserver.editButtonPressed(item));
+                ((Button)mRightNode).setOnAction(actionEvent -> mObserver.removeButtonPressed(item));
+            }
+
             // Make sure the checkbox is checked if this item in the cart
             if (mIsCustomerView)
                 ((CheckBox)mLeftNode).setSelected(mOrder.isInCart(item));
@@ -122,7 +127,6 @@ public class MenuListView extends VBox
     }
 
     public MenuListView(Menu menu, Order order, Observer observer, boolean isCustomerView) {
-        mMenu = menu;
         mOrder = order;
         mObserver = observer;
         mIsCustomerView = isCustomerView;

@@ -4,14 +4,14 @@ public class User {
     boolean isEmployee;
 
     public String getUsername() {
-        return "";
+        return "Eric Wu";
     }
     
     public boolean verifyPassword() {
-        return false;
+        return true;
     }
 
     public boolean isEmployee() {
-        return false;
+        return true;
     }
 }
