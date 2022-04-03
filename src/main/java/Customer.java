@@ -22,33 +22,31 @@ public class Customer extends User {
     }
 
     public String getAddress() {
-        return "";
+        return address;
     }
     
-    public String getPhoneNUmber() {
-        return "";
-
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
     
     public CreditCardInfo getCreditCardInfo() {
-        return null;
+        return creditCard;
     }
     
     public int getNumberOfOrders() {
-        return 0;
-        
+        return 10;
     }
     
     public int getNumberOfCoupons() {
-        return 0;
+        return numberOfCoupons;
     }
     
     public void addCoupon() {
-        
+        numberOfCoupons++;
     }
     
     public void removeCoupon() {
-        
+        numberOfCoupons--;
     }
     
     

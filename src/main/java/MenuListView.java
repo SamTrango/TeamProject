@@ -16,9 +16,9 @@ import java.util.Comparator;
 
 public class MenuListView extends VBox
 {
-    private Order mOrder;
-    private Observer mObserver;
-    private boolean mIsCustomerView;
+    private final Order mOrder;
+    private final Observer mObserver;
+    private final boolean mIsCustomerView;
 
     public static class Observer
     {
@@ -55,7 +55,6 @@ public class MenuListView extends VBox
                 mGrid = new GridPane();
                 mGrid.setHgap(5);
                 mGrid.setVgap(5);
-                //mGrid.setGridLinesVisible(true);
                 mGrid.setPadding(new Insets(5, 5, 5, 5));
 
                 // Create new GUI elements
