@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +13,15 @@ public class UserDatabase {
 
     }
     
-    void addUser() {
-
+    void addUser(User user) {
+        users.put(user.getUsername(), user);
     }
     
     User lookupUser(User toLookup) {
         return new User();
     }
 
-    User getUser() {
-        return new User();
+    Collection<User> getUsers() {
+        return users.values();
     }
 }
