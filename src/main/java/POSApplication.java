@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -19,16 +22,23 @@ public class POSApplication extends Application
     private Stage mStage;
     private Scene mScene;
 
-    public POSApplication() {
+    public POSApplication() throws IOException {
         mUserDatabase = new UserDatabase();
         mMenu = new Menu();
         mOrderQueue = new OrderQueue(mMenu);
         mLoggedInUser = null;
-
+        try {
+            mMenu.loadFromFile("Menu.txt");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        /*
         String[] ingredients1 = {"Tomatoes", "Potatoes"};
         mMenu.addItem(new MenuItem("BItem 1", ingredients1, "./food_images/salsa.jpg", 1.00, 10));
         mMenu.addItem(new MenuItem("CItem 2", ingredients1, "./food_images/salsa.jpg", 5.00, 5));
         mMenu.addItem(new MenuItem("AItem 3", ingredients1, "./food_images/salsa.jpg", 2.50, 20));
+        */
     }
 
     public void loggedIn(User user) {

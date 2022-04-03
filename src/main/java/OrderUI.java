@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
     private POSApplication app;
-    private Order inProgressOrder;
+    private Order inProgressOrder = new Order(false, .15, "Ian");
 
     public class MenuListObserver extends MenuListView.Observer{
         @Override
@@ -30,6 +30,7 @@ public class OrderUI extends StackPane {
 
     public OrderUI(POSApplication _app) {
         app = _app;
+        showMenuAndCart();
     }
 
     public void resetUI(){

@@ -1,0 +1,6 @@
+BItem 1,1.0,10,./food_images/salsa.jpg
+Tomatoes,Potatoes
+CItem 2,5.0,5,./food_images/salsa.jpg
+Tomatoes,Potatoes
+AItem 3,2.5,20,./food_images/salsa.jpg
+Tomatoes,Potatoes

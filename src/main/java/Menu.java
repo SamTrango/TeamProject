@@ -7,32 +7,37 @@ import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Menu {
+public class Menu{
     private ObservableList<MenuItem> items = FXCollections.observableArrayList();
+   
     public void loadFromFile(String file) throws FileNotFoundException{ 
-        int itemCount = 0;
-        int ingredientCount = 0;
-        String temp;
-        Scanner read = new Scanner (new File(file)); 
-        read.useDelimiter(",");
-        String Name, imageSrc;
-        ArrayList<String> ingredients = new ArrayList<>();
-        int price, prepareTime;
-        for(int i = 0; i < itemCount;i++){
-            while (read.hasNext()) //order of file is price, name, preptime, image source then ingredients
-            {
-                price = read.nextInt();
-                Name = read.nextLine();
-                imageSrc = read.next();
-                prepareTime = read.nextInt();
-                temp = read.nextLine();
-                while(temp != null){
-                    ingredients.add(ingredientCount,temp.substring(0, temp.indexOf(",")));
-                    temp = temp.substring(temp.indexOf(","));
-                    ingredientCount++;
-               }
-               MenuItem item = new MenuItem(Name, ingredients.toArray(new String[0]),imageSrc,price,prepareTime);
-               addItem(item);
+        //load from file format:
+        //itemName,itemPrice,itemWaitTime,itemImgSrc
+        //itemIngredient1,itemIngredient2,...
+        Scanner scanner = new Scanner (new File(file));
+        String itemName = ""; 
+        String itemImgSrc = "";
+        double itemPrice = 0.0;
+        int itemPrepTime = 0;
+        String[] itemIgredients;
+        boolean ingredientsLineRead = false;
+        while(scanner.hasNext()){
+            String[] sections = scanner.nextLine().split(",");
+            if(!ingredientsLineRead){
+                itemName = sections[0];
+                itemPrice = Double.parseDouble(sections[1]);
+                itemPrepTime = Integer.parseInt(sections[2]);
+                itemImgSrc = sections[3];
+                ingredientsLineRead = true;
+                
+            }
+            else{
+                itemIgredients = new String[sections.length];
+                for(int i = 0; i < sections.length; i++){
+                    itemIgredients[i] = sections[i];
+                }
+                items.add(new MenuItem(itemName, itemIgredients, itemImgSrc, itemPrice, itemPrepTime));
+                ingredientsLineRead = false;
             }
         }
     }
@@ -40,11 +45,19 @@ public class Menu {
     public void storeToFile(String file) throws IOException{
         FileWriter fw = new FileWriter(file);
         for(int i = 0; i < items.size();i++){
-            fw.write((int) items.get(i).getPrice());
-            fw.write(items.get(i).getName());
-            fw.write(items.get(i).getImgSrc());
-            fw.write(items.get(i).getPrepTime());
-            fw.write(items.get(i).getIngredients().toString());
+            fw.write(items.get(i).getName() + "," +
+            Double.toString(items.get(i).getPrice()) + "," +
+            items.get(i).getPrepTime() + "," +
+            items.get(i).getImgSrc() + "\n");
+            int ingredientCount = 0;
+            for(String str : items.get(i).getIngredients()){
+                ingredientCount++;
+                fw.write(str);
+                if(items.get(i).getIngredients().size() == ingredientCount)
+                    break;
+                fw.write(",");
+            }
+            fw.write("\n");
         }
         fw.close();
     }
