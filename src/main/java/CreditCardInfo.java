@@ -8,7 +8,7 @@
  * @author daniel
  */
 
-public class CreditCardInfo {
+public class CreditCardInfo implements Serializable{
 
     private String _ccnumber;
     private int _month;
