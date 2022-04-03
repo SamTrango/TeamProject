@@ -29,18 +29,18 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class LoginUI extends BorderPane {
+public class createAccountUI extends BorderPane {
 
     private POSApplication _posApp;
 
-    public LoginUI(POSApplication app) {
+    public createAccountUI(POSApplication app) {
         _posApp = app;
 
         // Add padding to our main GridPane, enable grid lines for debugging
         setPadding(new Insets(15, 15, 15, 15));
         
         // Create the title label
-        Label titleLabel = new Label("Restaurant Name");
+        Label titleLabel = new Label("Create Customer Account");
         titleLabel.setFont(new Font(40));
         BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
@@ -58,10 +58,46 @@ public class LoginUI extends BorderPane {
         passwordField.setPromptText("Enter your password");
         GridPane.setHgrow(passwordField, Priority.ALWAYS);
 
+        Label nameLabel = new Label("Name:");
+        TextField nameField = new TextField();
+        nameField.setPromptText("Enter your name");
+        GridPane.setHgrow(nameField, Priority.ALWAYS);
+
+        Label addressLabel = new Label("Address:");
+        TextField addressField = new TextField();
+        addressField.setPromptText("Enter your address");
+        GridPane.setHgrow(addressField, Priority.ALWAYS);
+
+        Label phoneNumberLabel = new Label("Phone Number:");
+        TextField phoneNumberField = new TextField();
+        phoneNumberField.setPromptText("Enter your phone number");
+        GridPane.setHgrow(phoneNumberField, Priority.ALWAYS);
+
+        Label emailLabel = new Label("Email:");
+        TextField emailField = new TextField();
+        emailField.setPromptText("Enter your email");
+        GridPane.setHgrow(emailField, Priority.ALWAYS);
+
+        Label ccLabel = new Label("Credit Card Number:");
+        TextField ccField = new TextField();
+        ccField.setPromptText("Enter your Credit Card Number");
+        GridPane.setHgrow(ccField, Priority.ALWAYS);
+
+
         userInput.add(usernameLabel, 0, 0);
         userInput.add(usernameField, 1, 0);
         userInput.add(passwordLabel, 0, 1);
         userInput.add(passwordField, 1, 1);
+        userInput.add(nameLabel, 0, 2);
+        userInput.add(nameField, 1, 2);
+        userInput.add(addressLabel, 0, 3);
+        userInput.add(addressField, 1, 3);
+        userInput.add(phoneNumberLabel, 0, 4);
+        userInput.add(phoneNumberField, 1, 4);
+        userInput.add(emailLabel, 0, 5);
+        userInput.add(emailField, 1, 5);
+        userInput.add(ccLabel, 0, 6);
+        userInput.add(ccField, 1, 6);
         userInput.setAlignment(Pos.CENTER);
 
         GridPane bottomButtons = new GridPane();
@@ -72,26 +108,20 @@ public class LoginUI extends BorderPane {
 
         bottomButtons.getColumnConstraints().addAll(constraints, constraints);
 
-        Button createAccountButton = new Button("Create Account");
-        createAccountButton.setMaxWidth(Double.MAX_VALUE);
-        createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setMaxWidth(Double.MAX_VALUE);
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 // Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
                 // alert.showAndWait();
-                Stage stage2 = new Stage();  //links create account button to createAccountUI that pops up
-                BorderPane bp = new createAccountUI(app);
-                //stage.show();
-                Scene scene2 = new Scene(bp);
-                stage2.setScene(scene2);
-                stage2.show();
-
+           
             }
         });
 
-        Button loginButton = new Button("Login");
-        loginButton.setMaxWidth(Double.MAX_VALUE);
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+        Button nextButton = new Button("Finish");
+        nextButton.setMaxWidth(Double.MAX_VALUE);
+        nextButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
                 // Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
@@ -99,50 +129,17 @@ public class LoginUI extends BorderPane {
             }
         });
 
-        bottomButtons.add(createAccountButton, 0, 0);
-        bottomButtons.add(loginButton, 1, 0);
+        bottomButtons.add(cancelButton, 0, 0);
+        bottomButtons.add(nextButton, 1, 0);
 
         setTop(titleLabel);
         setCenter(userInput);
         setBottom(bottomButtons);
     }
 
-    private void showMainScreen() {
+    
 
-        // Example of checking login information
-        String username = "";
-        String password = "";
+    
 
-        User user = _posApp.getUsers().lookupUser(username);
-
-        // Check for valid username and password
-        if (user != null && user.verifyPassword(password)) {
-            _posApp.loggedIn(user); // Tell the main application that we are done logging in
-        } else {
-            // Notify the user that their login info is incorrect
-            Alert alert = new Alert(AlertType.ERROR, "Invalid Login Info", ButtonType.OK);
-            alert.showAndWait();
-        }
-     
-    }
-
-    private void showAccountCreation() {
-        // Example of creating a new user
-
-        // Ensure that the new account username is unique
-        if (_posApp.getUsers().lookupUser("PutEnteredUsernameHere") != null) {
-            // Get new account info from UI and create a new Customer
-            CreditCardInfo ccInfo = new CreditCardInfo("CreditCardNumber", 0, 0, 0);
-            Customer newCustomer = new Customer("Username", "Password", "Address", "PhoneNumber", ccInfo);
-
-            // Add the new user to the user database
-            _posApp.getUsers().addUser(newCustomer);
-        } else {
-            // Error because the username is already taken
-        }
-    }
-
-    public void startLogin() {
-
-    }
+   
 }

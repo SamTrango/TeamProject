@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Menu {
-    private ArrayList<MenuItem> items;
+    private ObservableList<MenuItem> items = FXCollections.observableArrayList();
     String line;
     int reading = 0;
     int itemCount = 0;
@@ -20,7 +23,6 @@ public class Menu {
             ArrayList<String> ingredients = new ArrayList<String>();
             int price, prepareTime;
             for(int i = 0; i < itemCount;i++){
-
             while (read.hasNext()) //order of file is price, name, preptime, image source then ingredients
             {
                price = read.nextInt();
@@ -40,6 +42,7 @@ public class Menu {
         }
 
     }
+
     public void storeToFile(String file) throws IOException{
         FileWriter fw = new FileWriter(file);
         for(int i = 0; i < items.size();i++){
@@ -57,8 +60,7 @@ public class Menu {
     public void removeItem(MenuItem name){
         items.remove(name);
     }
-    public List<MenuItem> getItems(){
+    public ObservableList<MenuItem> getItems(){
         return items;
     }
-
 }
