@@ -56,6 +56,7 @@ public class POSApplication extends Application
             mScene.setRoot(mEmployeeUI);
             mStage.setTitle("POS - Employee View");
         } else {
+            mOrderUI.resetUI();
             mScene.setRoot(mOrderUI);
             mStage.setTitle("POS - Customer View");
         }

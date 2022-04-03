@@ -9,7 +9,9 @@ import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
     private POSApplication app;
-    private Order inProgressOrder = new Order(false, .15, "Ian");
+    private SplitPane menuCart;
+    private VBox orderWaitScreen;
+    private Order inProgressOrder;
 
     public class MenuListObserver extends MenuListView.Observer{
         @Override
@@ -30,16 +32,16 @@ public class OrderUI extends StackPane {
 
     public OrderUI(POSApplication _app) {
         app = _app;
-        showMenuAndCart();
     }
 
     public void resetUI(){
-        inProgressOrder = new Order((((Customer)app.getLoggedInUser()).getNumberOfCoupons() > 0), 0.15, app.getLoggedInUser().getUsername());
+        inProgressOrder = findOrder();
         showMenuAndCart();
+        getChildren().add(menuCart);
     }
 
     private void showMenuAndCart() {
-        SplitPane splitPane = new SplitPane();
+        menuCart = new SplitPane();
         VBox menu = new VBox(new Label("Menu"));
         VBox cart = new VBox(new Label("Cart"));
         VBox menuList = new MenuListView(app.getMenu(), inProgressOrder, new MenuListObserver(), true);
@@ -78,7 +80,8 @@ public class OrderUI extends StackPane {
 
         cart.setPadding(new Insets(5,5,5,5));
         cart.setSpacing(5);
-        
+
+        but_order.setAlignment(Pos.CENTER);
         but_order.setMaxWidth(Double.MAX_VALUE);
         but_order.setFont(new Font(15));
 
@@ -86,28 +89,26 @@ public class OrderUI extends StackPane {
         but_logOut.setMaxWidth(Double.MAX_VALUE);
         but_logOut.setFont(new Font(15));
 
-        splitPane.setDividerPositions(.6);
+        menuCart.setDividerPositions(.6);
 
         but_logOut.setOnAction((event) -> { 
-            getChildren().clear();
+            getChildren().remove(menuCart);
             app.loggedOut();
         });
 
         but_order.setOnAction((event) -> {
             app.getOrderQueue().addOrder(inProgressOrder);
-            getChildren().clear();
             showOrderProgress();
         });
 
         prices.getChildren().addAll(lab_subtotal,lab_discount,lab_total);
         menu.getChildren().addAll(menuList,but_logOut);
         cart.getChildren().addAll( orderList, prices, but_order);
-        splitPane.getItems().addAll(menu,cart);
-        getChildren().add(splitPane);
+        menuCart.getItems().addAll(menu,cart);
     }
 
     private void showOrderProgress() {
-        VBox vBox = new VBox();
+        orderWaitScreen = new VBox();
         Text txt_Msg = new Text("We're working on your order!");
         Text txt_Pos = new Text("Position in line: " + findPositionInLine());
         Text txt_EstTime = new Text("Estimated Wait Time: " + convertWaitTime());
@@ -119,15 +120,15 @@ public class OrderUI extends StackPane {
         but_Cancel.setFont(new Font(30));
 
         but_Cancel.setOnAction((event)->{
-            getChildren().clear();
-            showMenuAndCart();
+            app.getOrderQueue().removeOrder(inProgressOrder);
+            getChildren().setAll(menuCart);          
         });
 
-        vBox.getChildren().addAll(txt_Msg, txt_Pos, txt_EstTime, but_Cancel);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setSpacing(5);
+        orderWaitScreen.getChildren().addAll(txt_Msg, txt_Pos, txt_EstTime, but_Cancel);
+        orderWaitScreen.setAlignment(Pos.CENTER);
+        orderWaitScreen.setSpacing(5);
 
-        getChildren().add(vBox);
+        getChildren().setAll(orderWaitScreen);
     }
 
     private void showDetailedView(MenuItem item) {
@@ -247,5 +248,13 @@ public class OrderUI extends StackPane {
         }
         else
             return minutes + " min";
+    }
+
+    private Order findOrder(){
+        for(Order order : app.getOrderQueue().getOrderQueueList()){
+            if (order.getUsername() == app.getLoggedInUser().getUsername());
+                return order;
+        }
+        return new Order((((Customer)app.getLoggedInUser()).getNumberOfCoupons() > 0), 0.15, app.getLoggedInUser().getUsername());
     }
 }
