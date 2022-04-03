@@ -1,5 +1,4 @@
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +20,13 @@ public class MenuItem {
         this.prepareTime = prepareTime;
     }
 
+    public int getPrepTime(){
+        return prepareTime;
+    }
     public String getName(){
         return _name;
     }
+
     public List<String> getIngredients(){
         return _ingredients;
     }
@@ -52,13 +55,13 @@ public class MenuItem {
         return _prepareTime;
     }
     public void setName(String name){
-
+        this.name = name;
     }
-    public void setIngredients(String[] ingredients){
-
+    public void setIngredients(ArrayList<String> ingredients){
+        this.ingredients = ingredients;
     }
     public void setImgSrc(String source){
-
+        this.imageSrc = source;
     }
     public void setPrice(double price){
         this.price = price;
