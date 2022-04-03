@@ -11,24 +11,32 @@ import java.util.Date;
 
 public class CreditCardInfo {
 
-    private String number;
-    private Date date;
-    private short code;
+    private String _ccnumber;
+    private int _month;
+    private int _year;
+    private int _code;
 
-    public CreditCardInfo(String ccNum, Date date, short secCode) {
-
+    public CreditCardInfo(String ccNum, int month, int year, int secCode) {
+            _ccnumber = ccNum;
+            _month = month;
+            _year = year;
+            _code = secCode;
     }
 
     public String getNumber() {
-        return "";
+        return _ccnumber;
     }
 
-    public Date getDate() {
-        return null;
+    public int getMonth() {
+        return _month;
     }
 
-    public short getCode() {
-        return 0;
+    public int getYear() {
+        return _year;
+    }
+
+    public int getCode() {
+        return _code;
     }
 
 }

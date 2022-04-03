@@ -3,12 +3,14 @@ public class User {
     String password;
     boolean isEmployee;
 
+    public User(String username, String password, boolean isEmployee) {}
+
     public String getUsername() {
         return "";
     }
     
-    public boolean verifyPassword() {
-        return false;
+    public boolean verifyPassword(String password) {
+        return true;
     }
 
     public boolean isEmployee() {

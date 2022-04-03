@@ -12,15 +12,15 @@ public class UserDatabase {
 
     }
     
-    void addUser() {
+    void addUser(User user) {
 
     }
     
-    User lookupUser(User toLookup) {
-        return new User();
+    User lookupUser(String toLookup) {
+        return null;
     }
 
     User getUser() {
-        return new User();
+        return null;
     }
 }
