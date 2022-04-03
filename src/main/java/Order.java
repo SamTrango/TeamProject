@@ -21,6 +21,8 @@ public class Order {
 
     }
 
+    public boolean isInCart(MenuItem item) { return true; }
+
     public List<MenuItem> getItems(){
         return new ArrayList<>();
     }

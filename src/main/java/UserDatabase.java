@@ -1,4 +1,3 @@
-
 /**
  * @Title: UserDatabase.java
  * @Author: Sam Kacprowicz 
@@ -19,6 +18,9 @@ import java.io.ObjectOutputStream;
 import java.net.PasswordAuthentication;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserDatabase {
     Map<String, User> users = new HashMap<String, User>();

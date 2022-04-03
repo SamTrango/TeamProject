@@ -72,6 +72,6 @@ public class User implements Serializable{
      * @Description: Standard toString method.
      */
     public @Override String toString() {
-        return this.getUsername() + "\n" + this.getPassword() + "\n" + this.isEmployee() + "\n";        
+        return this.getUsername() + "\n" + this.getPassword() + "\n" + this.isEmployee() + "\n";
     }
 }
