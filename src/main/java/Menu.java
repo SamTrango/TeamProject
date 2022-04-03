@@ -20,7 +20,7 @@ public class Menu {
     Scanner read = new Scanner (new File(file)); 
     read.useDelimiter(",");
             String Name, imageSrc;
-            ArrayList<String> ingredients = new ArrayList<String>();
+            ArrayList<String> ingredients = new ArrayList<>();
             int price, prepareTime;
             for(int i = 0; i < itemCount;i++){
             while (read.hasNext()) //order of file is price, name, preptime, image source then ingredients
@@ -35,7 +35,7 @@ public class Menu {
                    temp = temp.substring(temp.indexOf(","));
                    ingredientCount++;
                }
-               MenuItem item = new MenuItem(Name,ingredients,imageSrc,price,prepareTime);
+               MenuItem item = new MenuItem(Name, ingredients.toArray(new String[0]),imageSrc,price,prepareTime);
                addItem(item);
             }
 

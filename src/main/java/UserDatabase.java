@@ -94,7 +94,7 @@ public class UserDatabase {
      * @Description: This method will return the USERS in the form of a COLLECTION.
      * @return: a list (collection) of USERS.
      */
-    Collection<User> getUser() {
+    Collection<User> getUsers() {
         return users.values();
     }
 }

@@ -29,10 +29,20 @@ public class OrderUI extends StackPane {
 
     public OrderUI(POSApplication _app) {
         app = _app;
-        for(Order order: app.getOrderQueue().getOrderQueue()){
-            if (order.getUsername().equals(app.getLoggedInUser().getUsername()))
+
+        // Retrieve an in progress order, if one exists
+        boolean found = false;
+        for(Order order : app.getOrderQueue().getOrderQueue()){
+            if (order.getUsername().equals(app.getLoggedInUser().getUsername())) {
                 inProgressOrder = order;
+                found = true;
+                break;
+            }
         }
+
+        if (!found)
+            inProgressOrder = new Order(false, 0.15, "Test");
+
         showMenuAndCart();
     }
 
@@ -200,7 +210,7 @@ public class OrderUI extends StackPane {
     }
 
     private String convertWaitTime(){
-        int hours = (int)Math.floor(inProgressOrder.calculateTotalWaitTime()/60);
+        int hours = (int)Math.floor(inProgressOrder.calculateTotalWaitTime()/60.0);
         int minutes = inProgressOrder.calculateTotalWaitTime() % 60;
         if (hours != 0){
             return  hours + " hr " + minutes + " min";

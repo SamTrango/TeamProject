@@ -24,19 +24,14 @@ public class MenuItem {
         return prepareTime;
     }
     public String getName(){
-        return _name;
+        return this.name;
     }
 
     public List<String> getIngredients(){
-        return _ingredients;
+        return this.ingredients;
     }
     public String getImgSrc(){
-        return _imageSrc;
-    }
-    public Image getImg(){
-        if(image == null)
-            image = new Image(getImgSrc());
-        return image;
+        return this.imageSrc;
     }
     public Image getImg(){
         // Prevent the application from crashing if the image is missing
@@ -49,16 +44,17 @@ public class MenuItem {
         return image;
     }
     public double getPrice(){
-        return _price;
+        return this.price;
     }
     public int getPrepareTime(){
-        return _prepareTime;
+        return this.prepareTime;
     }
     public void setName(String name){
         this.name = name;
     }
-    public void setIngredients(ArrayList<String> ingredients){
-        this.ingredients = ingredients;
+    public void setIngredients(String[] ingredients){
+        this.ingredients.clear();
+        this.ingredients.addAll(List.of(ingredients));
     }
     public void setImgSrc(String source){
         this.imageSrc = source;

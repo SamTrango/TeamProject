@@ -14,7 +14,7 @@ public class OrderQueue {
     public void loadFromFile(String file) throws FileNotFoundException {
         File orderFile = new File(file);
         Scanner scanner = new Scanner(orderFile);
-        Boolean hasCoupon = false;
+        boolean hasCoupon = false;
         double discountPercentage = 0.0;
         String username = "";
         while(scanner.hasNextLine()){

@@ -55,9 +55,8 @@ public class User implements Serializable {
      * instance variable, "isEmployee".
      * @return: The value "isEmployee" is set.
      */
-    public int isEmployee() {
-        int rv = this.isEmployee ? 1 : 0;
-        return rv;
+    public boolean isEmployee() {
+        return this.isEmployee;
     }
     
     /**

@@ -1,8 +1,5 @@
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.application.Application;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -25,15 +22,13 @@ public class POSApplication extends Application
     public POSApplication() {
         mUserDatabase = new UserDatabase();
         mMenu = new Menu();
-        mOrderQueue = new OrderQueue();
+        mOrderQueue = new OrderQueue(mMenu);
         mLoggedInUser = null;
 
         String[] ingredients1 = {"Tomatoes", "Potatoes"};
         mMenu.addItem(new MenuItem("BItem 1", ingredients1, "./food_images/salsa.jpg", 1.00, 10));
         mMenu.addItem(new MenuItem("CItem 2", ingredients1, "./food_images/salsa.jpg", 5.00, 5));
         mMenu.addItem(new MenuItem("AItem 3", ingredients1, "./food_images/salsa.jpg", 2.50, 20));
-
-        mUserDatabase.addUser(new Customer());
     }
 
     public void loggedIn(User user) {
@@ -89,10 +84,7 @@ public class POSApplication extends Application
         stage.show();
 
         // Call logged out to reset the UI to the login screen
-        //loggedOut();
-
-        //TODO Remove in the future, temporary way to open straight to EmployeeUI
-        loggedIn(new User());
+        loggedOut();
     }
 
     public static void main(String[] args) {

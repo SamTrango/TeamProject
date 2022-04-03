@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import java.io.Serializable;
+
 /**
  *
  * @author daniel
