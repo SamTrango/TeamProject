@@ -16,11 +16,12 @@ public class UserDatabase {
 
     }
     
-    User lookupUser(User toLookup) {
+    /*User lookupUser(User toLookup) {
         return new User();
     }
 
     User getUser() {
         return new User();
     }
+    */
 }

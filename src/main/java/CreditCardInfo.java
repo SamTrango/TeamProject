@@ -12,10 +12,9 @@ import java.util.Date;
 public class CreditCardInfo {
 
     private String number;
-    private Date date;
-    private short code;
+    private int code;
 
-    public CreditCardInfo(String ccNum, Date date, short secCode) {
+    public CreditCardInfo(String ccNum, int secCode) {
 
     }
 

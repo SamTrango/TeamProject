@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
     private POSApplication app;
-    private Order inProgressOrder = new Order(true, .4, "IanGay");
+    private Order inProgressOrder;
 
     public class MenuListObserver extends MenuListView.Observer{
         @Override
@@ -27,8 +27,12 @@ public class OrderUI extends StackPane {
         }
     }
 
-    public OrderUI(POSApplication app) {
-        this.app = app;
+    public OrderUI(POSApplication _app) {
+        app = _app;
+        for(Order order: app.getOrderQueue().getOrderQueue()){
+            if (order.getUsername().equals(app.getLoggedInUser().getUsername()))
+                inProgressOrder = order;
+        }
         showMenuAndCart();
     }
 
@@ -41,10 +45,10 @@ public class OrderUI extends StackPane {
         Button but_order = new Button("Order");
         Label lab_total = new Label();
         ListView<MenuItem> orderList = new ListView<MenuItem>();
-
         orderList.setCellFactory(lv -> new CustomCell());
-        lab_total.setText(String.format("Total: $%.2f", 1.1)); //remove after testing
-        //lab_total.setText(String.format("Total: $%.2f" + inProgressOrder.calculateTotalPrice()); // Actual implementation
+        orderList.setItems(inProgressOrder.getItems());
+        //lab_total.setText(String.format("Total: $%.2f", 1.1)); //remove after testing
+        lab_total.setText(String.format("Total: $%.2f", inProgressOrder.calculateTotalPrice())); // Actual implementation
         
         but_logOut.setAlignment(Pos.BOTTOM_CENTER);
         VBox.setVgrow(orderList, Priority.ALWAYS);
@@ -62,7 +66,7 @@ public class OrderUI extends StackPane {
         cart.setSpacing(5);
 
         but_logOut.setOnAction((event) -> { 
-            getChildren().clear();
+            //getChildren().clear();
             app.loggedOut();
         });
 
@@ -80,8 +84,8 @@ public class OrderUI extends StackPane {
     private void showOrderProgress() {
         VBox vBox = new VBox();
         Text txt_Msg = new Text("We're working on your order!");
-        Text txt_Pos = new Text("Position in line: #" );
-        Text txt_EstTime = new Text("Estimated Wait Time: ");
+        Text txt_Pos = new Text("Position in line: " );
+        Text txt_EstTime = new Text("Estimated Wait Time: " + convertWaitTime());
         Button but_Cancel = new Button("Cancel Order");
 
         txt_Msg.setFont(new Font(30));
@@ -136,17 +140,18 @@ public class OrderUI extends StackPane {
         Button but_RemoveItem = new Button("X");
         but_RemoveItem.setPrefWidth(25);
         but_RemoveItem.setOnAction((event) ->{
-            //inProgressOrder.removeFromCart(item, true); // Actual implementation
+            inProgressOrder.removeFromCart(item, true); // Actual implementation
         });
 
         Button but_SubtractItem = new Button("-");
         but_SubtractItem.setPrefWidth(25);
         but_SubtractItem.setOnAction((event) ->{
-            //inProgressOrder.removeFromCart(item, false); // Actual implementation
+            inProgressOrder.removeFromCart(item, false); // Actual implementation
         });
 
         //TextField txt_itemAmount = new TextField(Integer.toString(itemAmount));
         TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); // Actual implementation
+        txt_itemAmount.setEditable(false);
         txt_itemAmount.setFont(new Font(20));
         txt_itemAmount.setAlignment(Pos.CENTER);
         txt_itemAmount.setPrefWidth(50);
@@ -155,13 +160,13 @@ public class OrderUI extends StackPane {
         Button but_AddItem = new Button("+");
         but_AddItem.setPrefWidth(25);
         but_AddItem.setOnAction((event) ->{
-            //inProgressOrder.addToCart(item); // Actual implementation
+            inProgressOrder.addToCart(item); // Actual implementation
         });
 
         Text txt_itemTotalPrice = new Text();
         txt_itemTotalPrice.setFont(new Font(20));
-        txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.calculateTotalPrice()));//remove after testing
-        //txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item))); //actual implementation
+        //txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.calculateTotalPrice()));//remove after testing
+        txt_itemTotalPrice.setText(String.format("$%.2f",inProgressOrder.priceForItem(item))); //actual implementation
         txt_itemTotalPrice.setTextAlignment(TextAlignment.CENTER);
 
         HBox hbox1 = new HBox(but_RemoveItem,txt_itemName);
@@ -192,5 +197,15 @@ public class OrderUI extends StackPane {
             BorderPane bPane = createOrderList(item); //actual implementation
             setGraphic(bPane);
         }
+    }
+
+    private String convertWaitTime(){
+        int hours = (int)Math.floor(inProgressOrder.calculateTotalWaitTime()/60);
+        int minutes = inProgressOrder.calculateTotalWaitTime() % 60;
+        if (hours != 0){
+            return  hours + " hr " + minutes + " min";
+        }
+        else
+            return minutes + " min";
     }
 }

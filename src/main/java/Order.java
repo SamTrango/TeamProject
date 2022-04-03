@@ -2,9 +2,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Order {
-    private Map<MenuItem, Integer> items = new HashMap<MenuItem, Integer>(); //Ian is a bitch and wants me to make this an observable map
+    private Map<MenuItem, Integer> _items = new HashMap<MenuItem, Integer>(); //Ian is a bitch and wants me to make this an observable map
+    private ObservableList<MenuItem> _observableList;
     private boolean _hasCoupon = false;
     private double _discountPercentage;
     private String _username;
@@ -13,6 +16,7 @@ public class Order {
         _hasCoupon = hasCoupon;
         _discountPercentage = discountPercentage;
         _username = username;
+        _observableList = getItems();
     }
 
     public void setHasCoupon(boolean hasCoupon){
@@ -25,6 +29,10 @@ public class Order {
 
     public void setUsername(String username){
         _username = username;
+    }
+
+    public ObservableList<MenuItem> getObservableList(){
+        return _observableList;
     }
 
     public boolean getHasCoupon(){
@@ -40,42 +48,42 @@ public class Order {
     }
 
     public int getMenuItemAmount(MenuItem item){
-        return items.get(item);
+        return _items.get(item);
     }
     public void addToCart(MenuItem item){
         // Fetch the current count or put in a 1 if this is the addition
-        Integer count =  items.putIfAbsent(item,1);
+        Integer count =  _items.putIfAbsent(item,1);
         if (count == null)
             return;
-        items.replace(item, count + 1); //Replace old key with ne key with incremented value
+        _items.replace(item, count + 1); //Replace old key with new key with incremented value
     }
 
     public void removeFromCart(MenuItem item, boolean removeAll){
-        Integer count = items.get(item);
+        Integer count = _items.get(item);
         if(count == null)
             return;
 
         if (count == 1 || removeAll)
-            items.remove(item);
+            _items.remove(item);
         else  
-            items.replace(item, count - 1);
+            _items.replace(item, count - 1);
     }
-    //Change to ObservableList
-    public List<MenuItem> getItems(){//Create a list of MenuItems in Order
-        ArrayList<MenuItem> orderItems = new ArrayList<MenuItem>();
-        for (Map.Entry<MenuItem,Integer> entry : items.entrySet()){ 
+
+    public ObservableList<MenuItem> getItems(){//Create a ObservableList of MenuItems in Order
+        List<MenuItem> orderItems = new ArrayList<MenuItem>();
+        for (Map.Entry<MenuItem,Integer> entry : _items.entrySet()){ 
             orderItems.add(entry.getKey());
-        } 
-        return orderItems;
+        }
+        return FXCollections.observableList(orderItems);
     }
 
     public double priceForItem(MenuItem item){
-        return item.getPrice() * items.get(item); // Item Price * # of items in Order
+        return item.getPrice() * _items.get(item); // Item Price * # of items in Order
     }
 
     public double calculateTotalPrice(){
         double total = 0;
-        for (Map.Entry<MenuItem,Integer> entry : items.entrySet()){ //Add total of all items in Order
+        for (Map.Entry<MenuItem,Integer> entry : _items.entrySet()){ //Add total of all items in Order
             total += entry.getValue()*entry.getKey().getPrice();
         }
         if(_hasCoupon){//Apply coupon discount,if applicaable
@@ -86,14 +94,14 @@ public class Order {
 
     public int calculateTotalWaitTime(){
         int waitTime = 0;
-        for (Map.Entry<MenuItem,Integer> entry : items.entrySet()){//Add total wait time for Order
+        for (Map.Entry<MenuItem,Integer> entry : _items.entrySet()){//Add total wait time for Order
             waitTime += entry.getValue()*entry.getKey().getPrepareTime();
         }
         return waitTime;
     }
 
     public boolean isInCart(MenuItem item){
-        return items.containsKey(item);
+        return _items.containsKey(item);
     }
 
 }
