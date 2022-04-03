@@ -22,11 +22,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
 
-public class createAccountUI extends BorderPane {
+public class CreateAccountUI extends BorderPane {
 
     private POSApplication _posApp;
 
-    public createAccountUI(POSApplication app) {
+    public CreateAccountUI(POSApplication app) {
         _posApp = app;
 
         // Add padding to our main GridPane, enable grid lines for debugging
