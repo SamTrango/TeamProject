@@ -6,48 +6,50 @@
 /**
  *
  * @author daniel
+ * 
  */
 public class Customer extends User {
-    private String address;
-    private String phoneNumber;
-    private CreditCardInfo creditCard;
-    private int numberOfOrders = 0;
-    private int numberOfCoupons = 0;
+    private String _address;
+    private String _phoneNumber;
+    private CreditCardInfo _creditCard;
+    private int _numberOfOrders = 0;
+    private int _numberOfCoupons = 0;
 
-    public Customer(String un, String pw, boolean employee) {
-        super(un, pw, employee);
-        address = "69 E gay place";
-        phoneNumber = "132313131";
-        creditCard = new CreditCardInfo("121", 11);
+    public Customer(String username, String password, String address, String phoneNumber, CreditCardInfo ccInfo) {
+        super(username, password, false);
+
+        _address = address;
+        _phoneNumber = phoneNumber;
+        _creditCard = ccInfo;
     }
-
+    
     public String getAddress() {
-        return address;
+        return _address;
     }
     
     public String getPhoneNumber() {
-        return phoneNumber;
+        return _phoneNumber;
+
     }
     
     public CreditCardInfo getCreditCardInfo() {
-        return creditCard;
+        return _creditCard;
     }
     
     public int getNumberOfOrders() {
-        return 10;
+        return _numberOfOrders;
+        
     }
     
     public int getNumberOfCoupons() {
-        return numberOfCoupons;
+        return _numberOfCoupons;
     }
     
     public void addCoupon() {
-        numberOfCoupons++;
+        _numberOfCoupons++;
     }
     
     public void removeCoupon() {
-        numberOfCoupons--;
-    }
-    
-    
+        _numberOfCoupons--;
+    } 
 }
