@@ -14,18 +14,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 public class UserDatabase {
-    Map<String, User> users = new HashMap<String, User>();
+    HashMap<String, User> users = new HashMap<>();
 
     /**
      * In order to use the loadFromFile and storeToFile methods, you need to add the phrase 'implements Serializable'
-     * to the USER, CUSTOMER, and CREDICARDINFO classes. In addition, the file written should be of type '.ser', a 
+     * to the USER, CUSTOMER, and CREDICARDINFO classes. In addition, the file written should be of type '.ser', a
      * universal filetype, e.g., "UserList.ser".
      * @throws ClassNotFoundException, IOException
      */
-    
+
     /**
      * @Description: This method will load the HashMap from the serialized file via 
      * deserialization.
@@ -33,18 +32,18 @@ public class UserDatabase {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    void loadFromFile(String filename) throws IOException, ClassNotFoundException {        
+    boolean loadFromFile(String filename) {
         //--------- HashMap implements Serializable already -------
-        try{
-            users = null;                                               //HashMap must be set to NULL.
+        try {
             FileInputStream fileIn = new FileInputStream(filename);     //Stream used to read from file.
             ObjectInputStream objectIn = new ObjectInputStream(fileIn); //Stream used to interpret the object's serialization.
-            users = (HashMap) objectIn.readObject();                    //Must CAST the serialied object to the proper datatype to avoid ClassNotFoundException.
+            users = (HashMap<String, User>) objectIn.readObject();      //Must CAST the serialied object to the proper datatype to avoid ClassNotFoundException.
+            System.out.println("??????????");
             objectIn.close();                                           //Close stream.
             fileIn.close();                                             //Close stream.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            return true;
+        } catch (Exception ignored) {}
+        return false;
     }
 
     /**
@@ -56,15 +55,11 @@ public class UserDatabase {
      * @throws IOException
      */
     void storeToFile(String filename) throws IOException {
-        try{
-            FileOutputStream fileOut = new FileOutputStream(filename);  //Stream used to write to file.
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);   //Stream used to format the object's serialization.
-            out.writeObject(users);                                     //Write object.
-            out.close();                                                //Close stream.
-            fileOut.close();                                            //Close stream.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        FileOutputStream fileOut = new FileOutputStream(filename);  //Stream used to write to file.
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);   //Stream used to format the object's serialization.
+        out.writeObject(users);                                     //Write object.
+        out.close();                                                //Close stream.
+        fileOut.close();                                            //Close stream.
     }
     
     /**
