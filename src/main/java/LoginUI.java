@@ -131,6 +131,7 @@ public class LoginUI extends VBox {
             userInput.add(label, 0, i);
             userInput.add(field, 1, i);
         }
+      
         userInput.setAlignment(Pos.CENTER);
 
         // Create CC labels and text fields

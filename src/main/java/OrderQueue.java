@@ -7,18 +7,21 @@ import java.util.Scanner;
 public class OrderQueue {
     private ArrayList<Order> orderQueue = new ArrayList<>();
     private Menu _menu;
+    
     public OrderQueue(Menu menu){
         _menu = menu;
     }
 
     public void loadFromFile(String file) throws FileNotFoundException {
-        File orderFile = new File(file);
-        Scanner scanner = new Scanner(orderFile);
+        //load from file format:
+        //hasCoupon,discountPercentage,username
+        //menuItem,menuItemAmount,menuItem,menuItemAmount,...
+        Scanner scanner = new Scanner(new File(file));
         boolean hasCoupon = false;
         double discountPercentage = 0.0;
         String username = "";
         while(scanner.hasNextLine()){
-            String[] sections = scanner.next().split(",");
+            String[] sections = scanner.nextLine().split(",");
             if(sections[0].contains("Order")){ //New order creation signaled by textfile
                 hasCoupon = Boolean.parseBoolean(sections[1]);
                 discountPercentage = Double.parseDouble(sections[2]);
@@ -39,7 +42,7 @@ public class OrderQueue {
         scanner.close();
     }
 
-    public List<Order> getOrderQueue(){
+    public List<Order> getOrderQueueList(){
         return orderQueue;
     }
 
