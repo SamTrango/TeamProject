@@ -3,10 +3,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 /**
  * JavaFX App
  */

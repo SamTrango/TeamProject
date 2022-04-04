@@ -182,7 +182,7 @@ public class EmployeeUI extends VBox
                     try {
                         Image img = new Image(new FileInputStream(file));
                         mImage.setImage(img);
-                        mImageSrc = file.getAbsolutePath();
+                        mImageSrc = file.getPath();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }

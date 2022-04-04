@@ -38,7 +38,6 @@ public class UserDatabase {
             FileInputStream fileIn = new FileInputStream(filename);     //Stream used to read from file.
             ObjectInputStream objectIn = new ObjectInputStream(fileIn); //Stream used to interpret the object's serialization.
             users = (HashMap<String, User>) objectIn.readObject();      //Must CAST the serialied object to the proper datatype to avoid ClassNotFoundException.
-            System.out.println("??????????");
             objectIn.close();                                           //Close stream.
             fileIn.close();                                             //Close stream.
             return true;

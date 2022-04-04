@@ -8,7 +8,7 @@ import javafx.scene.text.*;
 import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
-    private POSApplication app;
+    private final POSApplication app;
     private SplitPane menuCart;
     private VBox orderWaitScreen;
     private Order inProgressOrder;
@@ -22,8 +22,8 @@ public class OrderUI extends StackPane {
             else{
                 inProgressOrder.removeFromCart(item, true);
             }
-
         }
+
         @Override
         public void viewIngredientsPressed(MenuItem item) {
             showDetailedView(item);
@@ -53,7 +53,7 @@ public class OrderUI extends StackPane {
         Label lab_total = new Label("Total: $0.00");
         
 
-        ListView<MenuItem> orderList = new ListView<MenuItem>();
+        ListView<MenuItem> orderList = new ListView<>();
         orderList.setCellFactory(lv -> new CustomCell());
         orderList.setItems(inProgressOrder.getItems());
         inProgressOrder.getItems().addListener((ListChangeListener.Change<? extends MenuItem> change) -> {
@@ -153,7 +153,7 @@ public class OrderUI extends StackPane {
         stage.show();
     }
 
-    private BorderPane createOrderList(MenuItem item){//Creates MeueItems in the cart
+    private BorderPane createOrderList(MenuItem item){//Creates MenuItems in the cart
         BorderPane bPane = new BorderPane();
         bPane.setPadding(new Insets(3, 3, 3, 3));
 
@@ -173,8 +173,13 @@ public class OrderUI extends StackPane {
         but_SubtractItem.setPrefWidth(25);
         but_SubtractItem.setOnAction((event) ->{
             inProgressOrder.removeFromCart(item, false);
-            MenuItem tempItem = inProgressOrder.getItems().remove(0);
-            inProgressOrder.getItems().add(0, tempItem);
+            if (inProgressOrder.isInCart(item)) {
+                MenuItem tempItem = inProgressOrder.getItems().remove(0);
+                inProgressOrder.getItems().add(0, tempItem);
+            } else {
+                app.getMenu().getItems().remove(item);
+                app.getMenu().getItems().add(item);
+            }
         });
 
         TextField txt_itemAmount = new TextField(Integer.toString(inProgressOrder.getMenuItemAmount(item))); 
@@ -252,9 +257,9 @@ public class OrderUI extends StackPane {
 
     private Order findOrder(){
         for(Order order : app.getOrderQueue().getOrderQueueList()){
-            if (order.getUsername() == app.getLoggedInUser().getUsername());
+            if (order.getUsername().equals(app.getLoggedInUser().getUsername()))
                 return order;
         }
-        return new Order((((Customer)app.getLoggedInUser()).getNumberOfCoupons() > 0), 0.15, app.getLoggedInUser().getUsername());
+        return new Order((((Customer)app.getLoggedInUser()).getNumberOfCoupons() > 0), 0.85, app.getLoggedInUser().getUsername());
     }
 }

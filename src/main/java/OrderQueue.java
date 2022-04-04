@@ -22,6 +22,8 @@ public class OrderQueue {
         String username = "";
         while(scanner.hasNextLine()){
             String[] sections = scanner.nextLine().split(",");
+            for (int i = 0; i < sections.length; i++)
+                sections[i] = sections[i].strip();
             if(sections[0].contains("Order")){ //New order creation signaled by textfile
                 hasCoupon = Boolean.parseBoolean(sections[1]);
                 discountPercentage = Double.parseDouble(sections[2]);
