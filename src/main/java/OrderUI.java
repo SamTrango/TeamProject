@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class OrderUI extends StackPane {
@@ -133,6 +134,8 @@ public class OrderUI extends StackPane {
 
     private void showDetailedView(MenuItem item) {
         Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(getScene().getWindow());
         BorderPane bPane = new BorderPane();
         Scene scene = new Scene(bPane, 500, 500);
         ImageView img = new ImageView(item.getImg());
@@ -143,7 +146,6 @@ public class OrderUI extends StackPane {
         BorderPane.setAlignment(img, Pos.CENTER);
         img.setFitWidth(200);
         img.setFitHeight(200);
-        
 
         ingredients.getItems().addAll(item.getIngredients());
         bPane.setLeft(img);
